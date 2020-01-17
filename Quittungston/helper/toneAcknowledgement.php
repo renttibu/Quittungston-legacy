@@ -315,7 +315,6 @@ trait QTON_toneAcknowledgement
         return $execute;
     }
 
-
     /**
      * Gets the amount of alarm sirens.
      *
