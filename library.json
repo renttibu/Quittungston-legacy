@@ -1,0 +1,12 @@
+{
+    "id": "{FC09418F-79AF-F15B-EEF5-D45E9997E0D8}",
+    "author": "Ulrich Bittner",
+    "name": "Quittungston",
+    "url": "https://github.com/ubittner/Quittungston",
+    "compatibility": {
+        "version": "5.2"
+    },
+    "version": "4.0",
+    "build": 1,
+    "date": 1579280400
+}

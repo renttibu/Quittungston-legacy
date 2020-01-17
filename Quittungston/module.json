@@ -1,0 +1,14 @@
+{
+  "id": "{DAC7CF88-0A1E-23C2-9DB2-0C249364A831}",
+  "name": "Quittungston",
+  "type": 3,
+  "vendor": "NTUB",
+  "aliases": [
+    "Quittungston"
+  ],
+  "url": "https://github.com/ubittner/Quittungston",
+  "parentRequirements": [],
+  "childRequirements": [],
+  "implemented": [],
+  "prefix": "QTON"
+}
