@@ -95,7 +95,7 @@ trait QTON_toneAcknowledgement
         }
         $this->SetValue('ToneAcknowledgement', $State);
         if ($State) {
-            $this->ExecuteToneAcknowledgement(-1, -1);
+            $this->TriggerToneAcknowledgement(-1, -1);
             $this->SetValue('ToneAcknowledgement', false);
         }
     }
@@ -126,7 +126,7 @@ trait QTON_toneAcknowledgement
      * 6    = Confirmation signal 0 long short
      * 7    = Confirmation signal 0 long short short
      */
-    public function ExecuteToneAcknowledgement(int $AcousticSignal = 0, int $OpticalSignal = 0): void
+    public function TriggerToneAcknowledgement(int $AcousticSignal = 0, int $OpticalSignal = 0): void
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wurde mit Parametern ' . json_encode($AcousticSignal) . ' und ' . json_encode($OpticalSignal) . ' aufgerufen.', 0);
         // Check alarm sirens
