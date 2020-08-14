@@ -1,11 +1,12 @@
 <?php
 
-// Declare
+/** @noinspection DuplicatedCode */
+
 declare(strict_types=1);
 
 trait QTON_toneAcknowledgement
 {
-    //#################### HM-Sec-Sir-WM
+    #################### HM-Sec-Sir-WM
 
     /**
      *
@@ -26,9 +27,9 @@ trait QTON_toneAcknowledgement
      * 3        = ALARM_BLOCKED
      */
 
-    //#################### HmIP-ASIR-O
-    //#################### HmIP-ASIR
-    //#################### HmIP-ASIR-2
+    #################### HmIP-ASIR-O
+    #################### HmIP-ASIR
+    #################### HmIP-ASIR-2
 
     /**
      *
@@ -84,9 +85,13 @@ trait QTON_toneAcknowledgement
      * @param bool $State
      * false    = no tone acknowledgement
      * true     = execute tone acknowledgement
+     * @throws Exception
      */
     public function ToggleToneAcknowledgement(bool $State): void
     {
+        if ($this->CheckMaintenanceMode()) {
+            return;
+        }
         $this->SendDebug(__FUNCTION__, 'Die Methode wurde mit Parameter ' . json_encode($State) . ' aufgerufen.', 0);
         // Check alarm sirens
         if (!$this->CheckExecution()) {
@@ -125,9 +130,13 @@ trait QTON_toneAcknowledgement
      * 5    = Confirmation signal 0 long long
      * 6    = Confirmation signal 0 long short
      * 7    = Confirmation signal 0 long short short
+     * @throws Exception
      */
     public function TriggerToneAcknowledgement(int $AcousticSignal = 0, int $OpticalSignal = 0): void
     {
+        if ($this->CheckMaintenanceMode()) {
+            return;
+        }
         $this->SendDebug(__FUNCTION__, 'Die Methode wurde mit Parametern ' . json_encode($AcousticSignal) . ' und ' . json_encode($OpticalSignal) . ' aufgerufen.', 0);
         // Check alarm sirens
         if (!$this->CheckExecution()) {
@@ -295,6 +304,9 @@ trait QTON_toneAcknowledgement
     private function CheckExecution(): bool
     {
         $execute = false;
+        if ($this->CheckMaintenanceMode()) {
+            return $execute;
+        }
         $alarmSirens = json_decode($this->ReadPropertyString('AlarmSirens'));
         if (!empty($alarmSirens)) {
             foreach ($alarmSirens as $alarmSiren) {
@@ -324,6 +336,9 @@ trait QTON_toneAcknowledgement
     private function GetAlarmSirenAmount(): int
     {
         $amount = 0;
+        if ($this->CheckMaintenanceMode()) {
+            return $amount;
+        }
         $alarmSirens = json_decode($this->ReadPropertyString('AlarmSirens'));
         if (!empty($alarmSirens)) {
             foreach ($alarmSirens as $alarmSiren) {
