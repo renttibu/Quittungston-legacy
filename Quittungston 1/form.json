@@ -1,0 +1,347 @@
+{
+  "elements": [
+    {
+      "type": "ExpansionPanel",
+      "caption": "Info",
+      "items": [
+        {
+          "type": "Label",
+          "caption": "Mit dieser Instanz kann eine Variable zur Ausgabe eines Quittungstons geschaltet werden.\nWeitere Informationen entnehmen Sie bitte der Dokumentation."
+        },
+        {
+          "type": "Label",
+          "caption": "ID:"
+        },
+        {
+          "type": "Label",
+          "caption": "Modul:"
+        },
+        {
+          "type": "Label",
+          "caption": "Version:"
+        },
+        {
+          "type": "Label",
+          "caption": "Datum:"
+        },
+        {
+          "type": "Label",
+          "caption": "Uhrzeit:"
+        },
+        {
+          "type": "Label",
+          "caption": "Entwickler:"
+        },
+        {
+          "type": "Label",
+          "caption": "Präfix:"
+        },
+        {
+          "type": "ValidationTextBox",
+          "name": "Note",
+          "caption": "Notiz",
+          "width": "600px"
+        },
+        {
+          "type": "Label",
+          "caption": " "
+        },
+        {
+          "type": "CheckBox",
+          "name": "MaintenanceMode",
+          "caption": "Wartungsmodus"
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Funktionen",
+      "items": [
+        {
+          "type": "Label",
+          "caption": "Bitte wählen Sie die Funktionen aus, die Sie verwenden wollen:"
+        },
+        {
+          "type": "CheckBox",
+          "name": "EnableAcousticSignal",
+          "caption": "Quittungston (Aus/An)"
+        },
+        {
+          "type": "CheckBox",
+          "name": "EnableMuteMode",
+          "caption": "Stummschaltung (Aus/An)"
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Quittungston",
+      "items": [
+        {
+          "type": "Label",
+          "caption": "Bitte wählen Sie die zu schaltende Variable für den Quittungston aus:"
+        },
+        {
+          "type": "SelectVariable",
+          "name": "ToneAcknowledgementVariable",
+          "caption": "Variable",
+          "width": "600px"
+        },
+        {
+          "type": "Label",
+          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden an:"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "ToneAcknowledgementVariableSwitchingDelay",
+          "caption": "Schaltverzögerung",
+          "suffix": "ms"
+        },
+        {
+          "type": "Label",
+          "caption": "\nBitte geben Sie die Impulsdauer für den Schaltvorgang an:"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "ImpulseDuration",
+          "caption": "Impulsdauer",
+          "suffix": "ms"
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Auslöser",
+      "items": [
+        {
+          "type": "Label",
+          "caption": "Bitte fügen Sie die auslösenden Variablen hinzu:"
+        },
+        {
+          "type": "List",
+          "name": "TriggerVariables",
+          "caption": "Variablen",
+          "rowCount": 10,
+          "add": true,
+          "delete": true,
+          "sort": {
+            "column": "ID",
+            "direction": "ascending"
+          },
+          "columns": [
+            {
+              "caption": "Aktiviert",
+              "name": "Use",
+              "width": "100px",
+              "add": true,
+              "edit": {
+                "type": "CheckBox"
+              }
+            },
+            {
+              "caption": "Variable",
+              "name": "ID",
+              "width": "600px",
+              "add": 0,
+              "onClick": "echo 'ID: ' . $TriggerVariables['ID'];",
+              "edit": {
+                "type": "SelectVariable"
+              }
+            },
+            {
+              "caption": "Auslösender Wert",
+              "name": "TriggerValue",
+              "width": "160px",
+              "add": 0,
+              "edit": {
+                "type": "Select",
+                "options": [
+                  {
+                    "caption": "0 | false",
+                    "value": 0
+                  },
+                  {
+                    "caption": "1 | true",
+                    "value": 1
+                  },
+                  {
+                    "caption": "2",
+                    "value": 2
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Stummschaltung",
+      "items": [
+        {
+          "type": "Label",
+          "caption": "Bitte wählen Sie aus, ob Sie eine automatische Stummschaltung verwenden wollen:"
+        },
+        {
+          "type": "CheckBox",
+          "name": "UseAutomaticMuteMode",
+          "caption": "Automatische Stummschaltung"
+        },
+        {
+          "type": "Label",
+          "caption": "\nBitte geben Sie die Startzeit für die Stummschaltung an:"
+        },
+        {
+          "type": "SelectTime",
+          "name": "MuteModeStartTime",
+          "caption": "Startzeit"
+        },
+        {
+          "type": "Label",
+          "caption": "\nBitte geben Sie die Endzeit für die Stummschaltung an:"
+        },
+        {
+          "type": "SelectTime",
+          "name": "MuteModeEndTime",
+          "caption": "Endzeit"
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "type": "ExpansionPanel",
+      "caption": "Konfiguration",
+      "items": [
+        {
+          "type": "Button",
+          "caption": "Neu einlesen",
+          "onClick": "QT1_ReloadConfiguration($id);"
+        },
+        {
+          "type": "RowLayout",
+          "items": [
+            {
+              "type": "SelectCategory",
+              "name": "BackupCategory",
+              "caption": "Kategorie",
+              "width": "600px"
+            },
+            {
+              "type": "Label",
+              "caption": " "
+            },
+            {
+              "type": "Button",
+              "caption": "Sichern",
+              "onClick": "QT1_CreateBackup($id, $BackupCategory);"
+            }
+          ]
+        },
+        {
+          "type": "RowLayout",
+          "items": [
+            {
+              "type": "SelectScript",
+              "name": "ConfigurationScript",
+              "caption": "Konfiguration",
+              "width": "600px"
+            },
+            {
+              "type": "Label",
+              "caption": " "
+            },
+            {
+              "type": "PopupButton",
+              "caption": "Wiederherstellen",
+              "popup": {
+                "caption": "Konfiguration wirklich wiederherstellen?",
+                "items": [
+                  {
+                    "type": "Button",
+                    "caption": "Wiederherstellen",
+                    "onClick": "QT1_RestoreConfiguration($id, $ConfigurationScript);"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Registrierte Nachrichten",
+      "items": [
+        {
+          "type": "List",
+          "name": "RegisteredMessages",
+          "rowCount": 11,
+          "sort": {
+            "column": "SenderID",
+            "direction": "ascending"
+          },
+          "columns": [
+            {
+              "caption": "Sender ID",
+              "name": "SenderID",
+              "width": "150px"
+            },
+            {
+              "caption": "Sender Name",
+              "name": "SenderName",
+              "width": "250px"
+            },
+            {
+              "caption": "Nachrichten ID",
+              "name": "MessageID",
+              "width": "150px"
+            },
+            {
+              "caption": "Nachrichten Bezeichnung",
+              "name": "MessageDescription",
+              "width": "260px"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Testbereich",
+      "items": [
+        {
+          "type": "TestCenter"
+        }
+      ]
+    }
+  ],
+  "status": [
+    {
+      "code": 101,
+      "icon": "active",
+      "caption": "Quittungston wird erstellt"
+    },
+    {
+      "code": 102,
+      "icon": "active",
+      "caption": "Quittungston ist aktiv"
+    },
+    {
+      "code": 103,
+      "icon": "active",
+      "caption": "Quittungston wird gelöscht"
+    },
+    {
+      "code": 104,
+      "icon": "inactive",
+      "caption": "Quittungston ist inaktiv"
+    },
+    {
+      "code": 200,
+      "icon": "inactive",
+      "caption": "Es ist Fehler aufgetreten, weitere Informationen unter Meldungen, im Log oder Debug!"
+    }
+  ]
+}

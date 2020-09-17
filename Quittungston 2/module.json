@@ -1,0 +1,14 @@
+{
+  "id": "{92B2AA6B-E2EF-496F-DD43-4F98970EDA03}",
+  "name": "Quittungston 2",
+  "type": 3,
+  "vendor": "Ulrich Bittner",
+  "aliases": [
+    "Quittungston 2 (HmIP-ASIR, HmIP-ASIR-O, HmIP-ASIR-2)"
+  ],
+  "url": "https://github.com/ubittner/Quittungston",
+  "parentRequirements": [],
+  "childRequirements": [],
+  "implemented": [],
+  "prefix": "QT2"
+}
