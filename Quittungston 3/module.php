@@ -125,7 +125,7 @@ class Quittungston3 extends IPSModule
         $formData['elements'][0]['items'][3]['caption'] = "Version:\t\t\t" . $moduleInfo['version'];
         $formData['elements'][0]['items'][4]['caption'] = "Datum:\t\t\t" . $moduleInfo['date'];
         $formData['elements'][0]['items'][5]['caption'] = "Uhrzeit:\t\t\t" . $moduleInfo['time'];
-        $formData['elements'][0]['items'][6]['caption'] = "Entwickler:\t\t" . $moduleInfo['developer'] . ',  Normen Thiel';
+        $formData['elements'][0]['items'][6]['caption'] = "Entwickler:\t\t" . $moduleInfo['developer'] . ', Normen Thiel';
         $formData['elements'][0]['items'][7]['caption'] = "Präfix:\t\t\tQT3";
         //Trigger variables
         $variables = json_decode($this->ReadPropertyString('TriggerVariables'));

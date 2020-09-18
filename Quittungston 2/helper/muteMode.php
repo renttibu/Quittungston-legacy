@@ -62,7 +62,7 @@ trait QT2_muteMode
             $milliseconds = $this->GetInterval('MuteModeStartTime');
         }
         $this->SetTimerInterval('StartMuteMode', $milliseconds);
-        // End
+        //End
         $milliseconds = 0;
         if ($use) {
             $milliseconds = $this->GetInterval('MuteModeEndTime');

@@ -16,7 +16,7 @@ Folgende Module beinhaltet das Quittungston Repository:
     Dieses Modul kann eine Variable zur Ausgabe eines Quittungstons schalten.
 
 - __Quittungston 2__ ([Dokumentation](Quittungston%202))  
-    Dieses Modul kann einen Quittungston mittels einer Alarmsirene (HmIP-ASIR, HmIP-ASIR-O, HmIP-ASIR-2) ausgeben.
+    Dieses Modul kann einen Quittungston mittels einer HmIP-ASIR, HmIP-ASIR-O, HmIP-ASIR-2 Alarmsirene ausgeben.
 
 - __Quittungston 3__ ([Dokumentation](Quittungston%203))  
-    Dieses Modul kann einen Quittungston mittels einer Alarmsirene (HM-Sec-Sir-WM) ausgeben.
+    Dieses Modul kann einen Quittungston mittels einer HM-Sec-Sir-WM Alarmsirene ausgeben.
