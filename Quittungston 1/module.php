@@ -294,7 +294,6 @@ class Quittungston1 extends IPSModule
         if ($muteMode) {
             $message = 'Abbruch, die Stummschaltung ist aktiv!';
             $this->SendDebug(__FUNCTION__, $message, 0);
-            $this->LogMessage('ID ' . $this->InstanceID . ', ' . __FUNCTION__ . ', ' . $message, KL_WARNING);
         }
         return $muteMode;
     }
