@@ -11,14 +11,9 @@ class QuittungstonValidationTest extends TestCaseSymconValidation
         $this->validateLibrary(__DIR__ . '/..');
     }
 
-    public function testValidateQuittungstonModule(): void
-    {
-        $this->validateModule(__DIR__ . '/../Quittungston');
-    }
-
     public function testValidateQuittungston1Module(): void
     {
-        $this->validateModule(__DIR__ . '/../Quittungston 2');
+        $this->validateModule(__DIR__ . '/../Quittungston 1');
     }
 
     public function testValidateQuittungston2Module(): void

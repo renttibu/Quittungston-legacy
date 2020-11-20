@@ -1,11 +1,27 @@
 <?php
 
-/** @noinspection PhpUnused */
 /** @noinspection DuplicatedCode */
+/** @noinspection PhpUnused */
+
+/*
+ * @module      Quittungston 1 (Variable)
+ *
+ * @prefix      QT1
+ *
+ * @file        QT1_muteMode.php
+ *
+ * @author      Ulrich Bittner
+ * @copyright   (c) 2020
+ * @license    	CC BY-NC-SA 4.0
+ *              https://creativecommons.org/licenses/by-nc-sa/4.0/
+ *
+ * @see         https://github.com/ubittner/Quittungston
+ *
+ */
 
 declare(strict_types=1);
 
-trait QT3_muteMode
+trait QT1_muteMode
 {
     /**
      * Toggles the mute mode off or on.

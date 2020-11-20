@@ -1,7 +1,22 @@
 <?php
 
 /** @noinspection PhpUnused */
-/** @noinspection DuplicatedCode */
+
+/*
+ * @module      Quittungston 1 (Variable)
+ *
+ * @prefix      QT1
+ *
+ * @file        QT1_toneAcknowledgement.php
+ *
+ * @author      Ulrich Bittner
+ * @copyright   (c) 2020
+ * @license    	CC BY-NC-SA 4.0
+ *              https://creativecommons.org/licenses/by-nc-sa/4.0/
+ *
+ * @see         https://github.com/ubittner/Quittungston
+ *
+ */
 
 declare(strict_types=1);
 

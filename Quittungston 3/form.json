@@ -2,64 +2,16 @@
   "elements": [
     {
       "type": "ExpansionPanel",
-      "caption": "Info",
+      "caption": "Funktionen",
       "items": [
-        {
-          "type": "Label",
-          "caption": "Mit dieser Instanz kann ein Quittungston mittels einer Alarmsirene (HM-Sec-Sir-WM) ausgegeben werden.\nWeitere Informationen entnehmen Sie bitte der Dokumentation."
-        },
-        {
-          "type": "Label",
-          "caption": "ID:"
-        },
-        {
-          "type": "Label",
-          "caption": "Modul:"
-        },
-        {
-          "type": "Label",
-          "caption": "Version:"
-        },
-        {
-          "type": "Label",
-          "caption": "Datum:"
-        },
-        {
-          "type": "Label",
-          "caption": "Uhrzeit:"
-        },
-        {
-          "type": "Label",
-          "caption": "Entwickler:"
-        },
-        {
-          "type": "Label",
-          "caption": "Präfix:"
-        },
-        {
-          "type": "ValidationTextBox",
-          "name": "Note",
-          "caption": "Notiz",
-          "width": "600px"
-        },
-        {
-          "type": "Label",
-          "caption": " "
-        },
         {
           "type": "CheckBox",
           "name": "MaintenanceMode",
           "caption": "Wartungsmodus"
-        }
-      ]
-    },
-    {
-      "type": "ExpansionPanel",
-      "caption": "Funktionen",
-      "items": [
+        },
         {
           "type": "Label",
-          "caption": "Bitte wählen Sie die Funktionen aus, die Sie verwenden wollen:"
+          "caption": " "
         },
         {
           "type": "CheckBox",
@@ -75,38 +27,8 @@
     },
     {
       "type": "ExpansionPanel",
-      "caption": "Alarmsirene",
-      "items": [
-        {
-          "type": "Label",
-          "caption": "Bitte wählen Sie die Instanz für die Alarmsirene (HM-Sec-Sir-WM, Kanal 4) aus:"
-        },
-        {
-          "type": "SelectInstance",
-          "name": "AlarmSiren",
-          "caption": "Alarmsirene",
-          "width": "600px"
-        },
-        {
-          "type": "Label",
-          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden an:"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "AlarmSirenSwitchingDelay",
-          "caption": "Schaltverzögerung",
-          "suffix": "ms"
-        }
-      ]
-    },
-    {
-      "type": "ExpansionPanel",
       "caption": "Auslöser",
       "items": [
-        {
-          "type": "Label",
-          "caption": "Bitte fügen Sie die auslösenden Variablen hinzu:"
-        },
         {
           "type": "List",
           "name": "TriggerVariables",
@@ -157,6 +79,10 @@
                   {
                     "caption": "2",
                     "value": 2
+                  },
+                  {
+                    "caption": "3",
+                    "value": 3
                   }
                 ]
               }
@@ -198,29 +124,39 @@
     },
     {
       "type": "ExpansionPanel",
-      "caption": "Stummschaltung",
+      "caption": "Alarmsirene",
       "items": [
         {
           "type": "Label",
-          "caption": "Bitte wählen Sie aus, ob Sie eine automatische Stummschaltung verwenden wollen:"
+          "caption": "Bitte wählen Sie die Instanz für die Alarmsirene (HM-Sec-Sir-WM, Kanal 4) aus"
         },
+        {
+          "type": "SelectInstance",
+          "name": "AlarmSiren",
+          "caption": "Alarmsirene",
+          "width": "600px"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "AlarmSirenSwitchingDelay",
+          "caption": "Schaltverzögerung",
+          "suffix": "Millisekunden"
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Stummschaltung",
+      "items": [
         {
           "type": "CheckBox",
           "name": "UseAutomaticMuteMode",
           "caption": "Automatische Stummschaltung"
         },
         {
-          "type": "Label",
-          "caption": "\nBitte geben Sie die Startzeit für die Stummschaltung an:"
-        },
-        {
           "type": "SelectTime",
           "name": "MuteModeStartTime",
           "caption": "Startzeit"
-        },
-        {
-          "type": "Label",
-          "caption": "\nBitte geben Sie die Endzeit für die Stummschaltung an:"
         },
         {
           "type": "SelectTime",
@@ -330,7 +266,7 @@
     },
     {
       "type": "ExpansionPanel",
-      "caption": "Testbereich",
+      "caption": "Schaltfunktionen",
       "items": [
         {
           "type": "TestCenter"
@@ -342,22 +278,22 @@
     {
       "code": 101,
       "icon": "active",
-      "caption": "Quittungston wird erstellt"
+      "caption": "Quittungston 3 (HomeMatic) wird erstellt"
     },
     {
       "code": 102,
       "icon": "active",
-      "caption": "Quittungston ist aktiv"
+      "caption": "Quittungston 3 (HomeMatic) ist aktiv"
     },
     {
       "code": 103,
       "icon": "active",
-      "caption": "Quittungston wird gelöscht"
+      "caption": "Quittungston 3 (HomeMatic) wird gelöscht"
     },
     {
       "code": 104,
       "icon": "inactive",
-      "caption": "Quittungston ist inaktiv"
+      "caption": "Quittungston 3 (HomeMatic) ist inaktiv"
     },
     {
       "code": 200,

@@ -1,11 +1,27 @@
 <?php
 
-/** @noinspection PhpUnused */
 /** @noinspection DuplicatedCode */
+/** @noinspection PhpUnused */
+
+/*
+ * @module      Quittungston 2 (Homematic IP)
+ *
+ * @prefix      QT2
+ *
+ * @file        QT2_muteMode.php
+ *
+ * @author      Ulrich Bittner
+ * @copyright   (c) 2020
+ * @license    	CC BY-NC-SA 4.0
+ *              https://creativecommons.org/licenses/by-nc-sa/4.0/
+ *
+ * @see         https://github.com/ubittner/Quittungston
+ *
+ */
 
 declare(strict_types=1);
 
-trait QT1_muteMode
+trait QT2_muteMode
 {
     /**
      * Toggles the mute mode off or on.
