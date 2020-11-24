@@ -294,22 +294,22 @@
     {
       "code": 101,
       "icon": "active",
-      "caption": "Quittungston 2 (Homematic IP) wird erstellt"
+      "caption": "Quittungston (Homematic IP) wird erstellt"
     },
     {
       "code": 102,
       "icon": "active",
-      "caption": "Quittungston 2 (Homematic IP) ist aktiv"
+      "caption": "Quittungston (Homematic IP) ist aktiv"
     },
     {
       "code": 103,
       "icon": "active",
-      "caption": "Quittungston 2 (Homematic IP) wird gelöscht"
+      "caption": "Quittungston (Homematic IP) wird gelöscht"
     },
     {
       "code": 104,
       "icon": "inactive",
-      "caption": "Quittungston 2 (Homematic IP) ist inaktiv"
+      "caption": "Quittungston (Homematic IP) ist inaktiv"
     },
     {
       "code": 200,

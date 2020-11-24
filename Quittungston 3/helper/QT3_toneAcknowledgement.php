@@ -52,10 +52,6 @@ trait QT3_toneAcknowledgement
         if ($this->CheckMuteMode()) {
             return $result;
         }
-        //Semaphore Enter
-        if (!IPS_SemaphoreEnter($this->InstanceID . '.AcousticSignal', 5000)) {
-            return $result;
-        }
         $id = $this->ReadPropertyInteger('AlarmSiren');
         if ($id != 0 && @IPS_ObjectExists($id)) {
             $result = true;
@@ -90,6 +86,10 @@ trait QT3_toneAcknowledgement
                     return false;
             }
             $this->SendDebug(__FUNCTION__, 'Akustisches Signal: ' . $AcousticSignal . ' - ' . $acousticSignalName, 0);
+            //Semaphore Enter
+            if (!IPS_SemaphoreEnter($this->InstanceID . '.AcousticSignal', 5000)) {
+                return $result;
+            }
             $execute = @HM_WriteValueInteger($id, 'ARMSTATE', $armState);
             if (!$execute) {
                 IPS_Sleep(self::DELAY_MILLISECONDS);
@@ -104,9 +104,9 @@ trait QT3_toneAcknowledgement
                     $this->LogMessage($errorMessage, KL_ERROR);
                 }
             }
+            //Semaphore leave
+            IPS_SemaphoreLeave($this->InstanceID . '.AcousticSignal');
         }
-        //Semaphore leave
-        IPS_SemaphoreLeave($this->InstanceID . '.AcousticSignal');
         return $result;
     }
 

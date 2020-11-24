@@ -278,22 +278,22 @@
     {
       "code": 101,
       "icon": "active",
-      "caption": "Quittungston 3 (HomeMatic) wird erstellt"
+      "caption": "Quittungston (HomeMatic) wird erstellt"
     },
     {
       "code": 102,
       "icon": "active",
-      "caption": "Quittungston 3 (HomeMatic) ist aktiv"
+      "caption": "Quittungston (HomeMatic) ist aktiv"
     },
     {
       "code": 103,
       "icon": "active",
-      "caption": "Quittungston 3 (HomeMatic) wird gelöscht"
+      "caption": "Quittungston (HomeMatic) wird gelöscht"
     },
     {
       "code": 104,
       "icon": "inactive",
-      "caption": "Quittungston 3 (HomeMatic) ist inaktiv"
+      "caption": "Quittungston (HomeMatic) ist inaktiv"
     },
     {
       "code": 200,

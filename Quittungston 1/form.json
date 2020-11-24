@@ -254,22 +254,22 @@
     {
       "code": 101,
       "icon": "active",
-      "caption": "Quittungston 1 (Variable) wird erstellt"
+      "caption": "Quittungston (Variable) wird erstellt"
     },
     {
       "code": 102,
       "icon": "active",
-      "caption": "Quittungston 1 (Variable) ist aktiv"
+      "caption": "Quittungston (Variable) ist aktiv"
     },
     {
       "code": 103,
       "icon": "active",
-      "caption": "Quittungston 1 (Variable) wird gelöscht"
+      "caption": "Quittungston (Variable) wird gelöscht"
     },
     {
       "code": 104,
       "icon": "inactive",
-      "caption": "Quittungston 1 (Variable) ist inaktiv"
+      "caption": "Quittungston (Variable) ist inaktiv"
     },
     {
       "code": 200,
