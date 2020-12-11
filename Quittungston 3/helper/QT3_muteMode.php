@@ -115,6 +115,9 @@ trait QT3_muteMode
     private function CheckMuteModeTimer(): void
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        if (!$this->ReadPropertyBoolean('UseAutomaticMuteMode')) {
+            return;
+        }
         $start = $this->GetTimerInterval('StartMuteMode');
         $stop = $this->GetTimerInterval('StopMuteMode');
         if ($start > $stop) {
