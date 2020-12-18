@@ -92,10 +92,12 @@ class Quittungston3 extends IPSModule
                     return;
                 }
                 //Trigger action
+                $valueChanged = 'false';
                 if ($Data[1]) {
-                    $scriptText = 'QT3_CheckTrigger(' . $this->InstanceID . ', ' . $SenderID . ');';
-                    IPS_RunScriptText($scriptText);
+                    $valueChanged = 'true';
                 }
+                $scriptText = 'QT3_CheckTrigger(' . $this->InstanceID . ', ' . $SenderID . ', ' . $valueChanged . ');';
+                IPS_RunScriptText($scriptText);
                 break;
 
         }
@@ -113,16 +115,18 @@ class Quittungston3 extends IPSModule
                 if (!$use) {
                     $rowColor = '';
                 }
-                $id = $variable->ID;
+                $id = $variable->TriggeringVariable;
                 if ($id == 0 || @!IPS_ObjectExists($id)) {
                     $rowColor = '#FFC0C0'; # red
                 }
                 $formData['elements'][1]['items'][0]['values'][] = [
-                    'Use'                                           => $use,
-                    'AcousticSignal'                                => $variable->AcousticSignal,
-                    'ID'                                            => $id,
-                    'TriggerValue'                                  => $variable->TriggerValue,
-                    'rowColor'                                      => $rowColor];
+                    'Use'                   => $use,
+                    'TriggeringVariable'    => $id,
+                    'Trigger'               => $variable->Trigger,
+                    'Value'                 => $variable->Value,
+                    'Condition'             => $variable->Condition,
+                    'AcousticSignal'        => $variable->AcousticSignal,
+                    'rowColor'              => $rowColor];
             }
         }
         //Registered messages
@@ -271,8 +275,8 @@ class Quittungston3 extends IPSModule
         if (!empty($variables)) {
             foreach ($variables as $variable) {
                 if ($variable->Use) {
-                    if ($variable->ID != 0 && @IPS_ObjectExists($variable->ID)) {
-                        $this->RegisterMessage($variable->ID, VM_UPDATE);
+                    if ($variable->TriggeringVariable != 0 && @IPS_ObjectExists($variable->TriggeringVariable)) {
+                        $this->RegisterMessage($variable->TriggeringVariable, VM_UPDATE);
                     }
                 }
             }

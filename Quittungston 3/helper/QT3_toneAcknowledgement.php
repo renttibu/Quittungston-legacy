@@ -114,6 +114,7 @@ trait QT3_toneAcknowledgement
      * Checks a trigger and toggles the tone acknowledgement.
      *
      * @param int $SenderID
+     * @param bool $ValueChanged
      *
      * @return bool
      * false    = an error occurred
@@ -121,7 +122,7 @@ trait QT3_toneAcknowledgement
      *
      * @throws Exception
      */
-    public function CheckTrigger(int $SenderID): bool
+    public function CheckTrigger(int $SenderID, bool $ValueChanged): bool
     {
         $result = false;
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
@@ -135,13 +136,148 @@ trait QT3_toneAcknowledgement
         $triggerVariables = json_decode($this->ReadPropertyString('TriggerVariables'));
         if (!empty($triggerVariables)) {
             foreach ($triggerVariables as $variable) {
-                $id = $variable->ID;
+                $id = $variable->TriggeringVariable;
                 if ($SenderID == $id) {
-                    $use = $variable->ID;
-                    if ($use) {
-                        $actualValue = intval(GetValue($id));
-                        $triggerValue = $variable->TriggerValue;
-                        if ($actualValue == $triggerValue) {
+                    if ($variable->Use) {
+                        $this->SendDebug(__FUNCTION__, 'Variable ' . $id . ' ist aktiv', 0);
+                        $execute = false;
+                        $type = IPS_GetVariable($id)['VariableType'];
+                        $trigger = $variable->Trigger;
+                        $value = $variable->Value;
+                        switch ($trigger) {
+                            case 0: #on change (bool, integer, float, string)
+                                if ($ValueChanged) {
+                                    $execute = true;
+                                }
+                                break;
+
+                            case 1: #on update (bool, integer, float, string)
+                                $execute = true;
+                                break;
+
+                            case 2: #on limit drop (integer, float)
+                                switch ($type) {
+                                    case 1: #integer
+                                        $actualValue = GetValueInteger($id);
+                                        $triggerValue = intval($value);
+                                        if ($actualValue < $triggerValue) {
+                                            $execute = true;
+                                        }
+                                        break;
+
+                                    case 2: #float
+                                        $actualValue = GetValueFloat($id);
+                                        $triggerValue = floatval(str_replace(',', '.', $value));
+                                        if ($actualValue < $triggerValue) {
+                                            $execute = true;
+                                        }
+                                        break;
+
+                                }
+                                break;
+
+                            case 3: #on limit exceed (integer, float)
+                                switch ($type) {
+                                    case 1: #integer
+                                        $actualValue = GetValueInteger($id);
+                                        $triggerValue = intval($value);
+                                        if ($actualValue > $triggerValue) {
+                                            $execute = true;
+                                        }
+                                        break;
+
+                                    case 2: #float
+                                        $actualValue = GetValueFloat($id);
+                                        $triggerValue = floatval(str_replace(',', '.', $value));
+                                        if ($actualValue > $triggerValue) {
+                                            $execute = true;
+                                        }
+                                        break;
+
+                                }
+                                break;
+
+                            case 4: #on specific value (bool, integer, float, string)
+                                switch ($type) {
+                                    case 0: #bool
+                                        $actualValue = GetValueBoolean($id);
+                                        if ($value == 'false') {
+                                            $value = '0';
+                                        }
+                                        $triggerValue = boolval($value);
+                                        if ($actualValue == $triggerValue) {
+                                            $condition = $variable->Condition;
+                                            switch ($condition) {
+                                                case 1: #trigger once
+                                                    if ($ValueChanged) {
+                                                        $execute = true;
+                                                    }
+                                                    break;
+
+                                                case 2: #trigger every time
+                                                    $execute = true;
+                                            }
+                                        }
+                                        break;
+
+                                    case 1: #integer
+                                        $actualValue = GetValueInteger($id);
+                                        $triggerValue = intval($value);
+                                        if ($actualValue == $triggerValue) {
+                                            $condition = $variable->Condition;
+                                            switch ($condition) {
+                                                case 1: #trigger once
+                                                    if ($ValueChanged) {
+                                                        $execute = true;
+                                                    }
+                                                    break;
+
+                                                case 2: #trigger every time
+                                                    $execute = true;
+                                            }
+                                        }
+                                        break;
+
+                                    case 2: #float
+                                        $actualValue = GetValueFloat($id);
+                                        $triggerValue = floatval(str_replace(',', '.', $value));
+                                        if ($actualValue == $triggerValue) {
+                                            $condition = $variable->Condition;
+                                            switch ($condition) {
+                                                case 1: #trigger once
+                                                    if ($ValueChanged) {
+                                                        $execute = true;
+                                                    }
+                                                    break;
+
+                                                case 2: #trigger every time
+                                                    $execute = true;
+                                            }
+                                        }
+                                        break;
+
+                                    case 3: #string
+                                        $actualValue = GetValueString($id);
+                                        $triggerValue = (string) $value;
+                                        if ($actualValue == $triggerValue) {
+                                            $condition = $variable->Condition;
+                                            switch ($condition) {
+                                                case 1: #trigger once
+                                                    if ($ValueChanged) {
+                                                        $execute = true;
+                                                    }
+                                                    break;
+
+                                                case 2: #trigger every time
+                                                    $execute = true;
+                                            }
+                                        }
+                                        break;
+
+                                }
+                                break;
+                        }
+                        if ($execute) {
                             $acousticSignal = $variable->AcousticSignal;
                             $result = $this->TriggerToneAcknowledgement($acousticSignal, true);
                         }
