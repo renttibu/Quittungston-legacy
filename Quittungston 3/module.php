@@ -1,71 +1,112 @@
 <?php
 
+/*
+ * @author      Ulrich Bittner
+ * @copyright   (c) 2020, 2021
+ * @license    	CC BY-NC-SA 4.0
+ * @see         https://github.com/ubittner/Quittungston/tree/master/Quittungston%203
+ */
+
 /** @noinspection DuplicatedCode */
 /** @noinspection PhpUnused */
-
-/*
- * @module      Quittungston 3 (HomeMatic)
- *
- * @prefix      QT3
- *
- * @file        module.php
- *
- * @author      Ulrich Bittner
- * @copyright   (c) 2020
- * @license    	CC BY-NC-SA 4.0
- *              https://creativecommons.org/licenses/by-nc-sa/4.0/
- *
- * @see         https://github.com/ubittner/Quittungston
- *
- */
 
 declare(strict_types=1);
 include_once __DIR__ . '/helper/autoload.php';
 
-class Quittungston3 extends IPSModule
+class Quittungston3 extends IPSModule # HomeMatic
 {
-    //Helper
+    // Helper
     use QT3_backupRestore;
     use QT3_muteMode;
     use QT3_toneAcknowledgement;
 
-    //Constants
+    // Constants
     private const DELAY_MILLISECONDS = 100;
 
     public function Create()
     {
-        //Never delete this line!
+        // Never delete this line!
         parent::Create();
-        $this->RegisterProperties();
-        $this->CreateProfiles();
-        $this->RegisterVariables();
-        $this->RegisterTimers();
-    }
 
-    public function Destroy()
-    {
-        //Never delete this line!
-        parent::Destroy();
-        $this->DeleteProfiles();
+        // Properties
+        // Functions
+        $this->RegisterPropertyBoolean('MaintenanceMode', false);
+        $this->RegisterPropertyBoolean('EnableAcousticSignal', true);
+        $this->RegisterPropertyBoolean('EnableMuteMode', true);
+        //Tone acknowledgement
+        $this->RegisterPropertyInteger('AlarmSiren', 0);
+        $this->RegisterPropertyInteger('AlarmSirenSwitchingDelay', 0);
+        //Trigger
+        $this->RegisterPropertyString('TriggerVariables', '[]');
+        //Mute function
+        $this->RegisterPropertyBoolean('UseAutomaticMuteMode', false);
+        $this->RegisterPropertyString('MuteModeStartTime', '{"hour":22,"minute":0,"second":0}');
+        $this->RegisterPropertyString('MuteModeEndTime', '{"hour":6,"minute":0,"second":0}');
+
+        // Variables
+        // Tone acknowledgement
+        $profile = 'QT3.' . $this->InstanceID . '.AcousticSignal';
+        if (!IPS_VariableProfileExists($profile)) {
+            IPS_CreateVariableProfile($profile, 1);
+            IPS_SetVariableProfileIcon($profile, 'Speaker');
+        }
+        IPS_SetVariableProfileAssociation($profile, 0, 'Alarm Aus', '', -1);
+        IPS_SetVariableProfileAssociation($profile, 1, 'Extern scharf', '', 0x00FF00);
+        IPS_SetVariableProfileAssociation($profile, 2, 'Intern scharf', '', 0x00FF00);
+        IPS_SetVariableProfileAssociation($profile, 3, 'Alarm blockiert', '', 0x00FF00);
+        $this->RegisterVariableInteger('AcousticSignal', 'Quittungston', $profile, 10);
+        $this->EnableAction('AcousticSignal');
+        // Mute mode
+        $this->RegisterVariableBoolean('MuteMode', 'Stummschaltung', '~Switch', 20);
+        $this->EnableAction('MuteMode');
+
+        // Timers
+        $this->RegisterTimer('StartMuteMode', 0, 'QT3_StartMuteMode(' . $this->InstanceID . ');');
+        $this->RegisterTimer('StopMuteMode', 0, 'QT3_StopMuteMode(' . $this->InstanceID . ',);');
     }
 
     public function ApplyChanges()
     {
-        //Wait until IP-Symcon is started
+        // Wait until IP-Symcon is started
         $this->RegisterMessage(0, IPS_KERNELSTARTED);
-        //Never delete this line!
+
+        // Never delete this line!
         parent::ApplyChanges();
-        //Check runlevel
+
+        // Check runlevel
         if (IPS_GetKernelRunlevel() != KR_READY) {
             return;
         }
-        $this->SetOptions();
-        if ($this->CheckMaintenanceMode()) {
+
+        // Options
+        IPS_SetHidden($this->GetIDForIdent('AcousticSignal'), !$this->ReadPropertyBoolean('EnableAcousticSignal'));
+        IPS_SetHidden($this->GetIDForIdent('MuteMode'), !$this->ReadPropertyBoolean('EnableMuteMode'));
+
+        // Validation
+        if (!$this->ValidateConfiguration()) {
             return;
         }
+
         $this->RegisterMessages();
         $this->SetMuteModeTimer();
         $this->CheckMuteModeTimer();
+    }
+
+    public function Destroy()
+    {
+        // Never delete this line!
+        parent::Destroy();
+
+        // Delete profiles
+        $profiles = ['AcousticSignal'];
+        if (!empty($profiles)) {
+            foreach ($profiles as $profile) {
+                $profileName = 'QT3.' . $this->InstanceID . '.' . $profile;
+                if (IPS_VariableProfileExists($profileName)) {
+                    IPS_DeleteVariableProfile($profileName);
+                }
+            }
+        }
     }
 
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
@@ -82,16 +123,19 @@ class Quittungston3 extends IPSModule
                 break;
 
             case VM_UPDATE:
-                //$Data[0] = actual value
-                //$Data[1] = value changed
-                //$Data[2] = last value
-                //$Data[3] = timestamp actual value
-                //$Data[4] = timestamp value changed
-                //$Data[5] = timestamp last value
+
+                // $Data[0] = actual value
+                // $Data[1] = value changed
+                // $Data[2] = last value
+                // $Data[3] = timestamp actual value
+                // $Data[4] = timestamp value changed
+                // $Data[5] = timestamp last value
+
                 if ($this->CheckMaintenanceMode()) {
                     return;
                 }
-                //Trigger action
+
+                // Check trigger
                 $valueChanged = 'false';
                 if ($Data[1]) {
                     $valueChanged = 'true';
@@ -106,7 +150,8 @@ class Quittungston3 extends IPSModule
     public function GetConfigurationForm()
     {
         $formData = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
-        //Trigger variables
+
+        // Trigger variables
         $variables = json_decode($this->ReadPropertyString('TriggerVariables'));
         if (!empty($variables)) {
             foreach ($variables as $variable) {
@@ -115,28 +160,28 @@ class Quittungston3 extends IPSModule
                 if (!$use) {
                     $rowColor = '';
                 }
-                $id = $variable->TriggeringVariable;
+                $id = $variable->ID;
                 if ($id == 0 || @!IPS_ObjectExists($id)) {
                     $rowColor = '#FFC0C0'; # red
                 }
-                $formData['elements'][1]['items'][0]['values'][] = [
+                $formData['elements'][2]['items'][0]['values'][] = [
                     'Use'                   => $use,
                     'TriggeringVariable'    => $id,
                     'Trigger'               => $variable->Trigger,
                     'Value'                 => $variable->Value,
-                    'Condition'             => $variable->Condition,
                     'AcousticSignal'        => $variable->AcousticSignal,
                     'rowColor'              => $rowColor];
             }
         }
-        //Registered messages
+
+        // Registered messages
         $messages = $this->GetMessageList();
         foreach ($messages as $senderID => $messageID) {
             $senderName = 'Objekt #' . $senderID . ' existiert nicht';
             $rowColor = '#FFC0C0'; # red
             if (@IPS_ObjectExists($senderID)) {
                 $senderName = IPS_GetName($senderID);
-                $rowColor = ''; # '#C0FFC0' # light green
+                $rowColor = '#C0FFC0'; # light green
             }
             switch ($messageID) {
                 case [10001]:
@@ -151,12 +196,13 @@ class Quittungston3 extends IPSModule
                     $messageDescription = 'keine Bezeichnung';
             }
             $formData['actions'][1]['items'][0]['values'][] = [
-                'SenderID'                                              => $senderID,
-                'SenderName'                                            => $senderName,
-                'MessageID'                                             => $messageID,
-                'MessageDescription'                                    => $messageDescription,
-                'rowColor'                                              => $rowColor];
+                'SenderID'              => $senderID,
+                'SenderName'            => $senderName,
+                'MessageID'             => $messageID,
+                'MessageDescription'    => $messageDescription,
+                'rowColor'              => $rowColor];
         }
+
         return json_encode($formData);
     }
 
@@ -171,7 +217,7 @@ class Quittungston3 extends IPSModule
     {
         switch ($Ident) {
             case 'AcousticSignal':
-                $this->TriggerToneAcknowledgement($Value);
+                $this->ExecuteToneAcknowledgement($Value);
                 break;
 
             case 'MuteMode':
@@ -188,78 +234,9 @@ class Quittungston3 extends IPSModule
         $this->ApplyChanges();
     }
 
-    private function RegisterProperties(): void
-    {
-        //Info
-        $this->RegisterPropertyString('Note', '');
-        $this->RegisterPropertyBoolean('MaintenanceMode', false);
-        //Functions
-        $this->RegisterPropertyBoolean('EnableAcousticSignal', true);
-        $this->RegisterPropertyBoolean('EnableMuteMode', true);
-        //Tone acknowledgement
-        $this->RegisterPropertyInteger('AlarmSiren', 0);
-        $this->RegisterPropertyInteger('AlarmSirenSwitchingDelay', 0);
-        //Trigger
-        $this->RegisterPropertyString('TriggerVariables', '[]');
-        //Mute function
-        $this->RegisterPropertyBoolean('UseAutomaticMuteMode', false);
-        $this->RegisterPropertyString('MuteModeStartTime', '{"hour":22,"minute":0,"second":0}');
-        $this->RegisterPropertyString('MuteModeEndTime', '{"hour":6,"minute":0,"second":0}');
-    }
-
-    private function CreateProfiles(): void
-    {
-        //Tone acknowledgement
-        $profile = 'QT3.' . $this->InstanceID . '.AcousticSignal';
-        if (!IPS_VariableProfileExists($profile)) {
-            IPS_CreateVariableProfile($profile, 1);
-            IPS_SetVariableProfileIcon($profile, 'Speaker');
-        }
-        IPS_SetVariableProfileAssociation($profile, 0, 'Alarm Aus', '', -1);
-        IPS_SetVariableProfileAssociation($profile, 1, 'Extern scharf', '', 0x00FF00);
-        IPS_SetVariableProfileAssociation($profile, 2, 'Intern scharf', '', 0x00FF00);
-        IPS_SetVariableProfileAssociation($profile, 3, 'Alarm blockiert', '', 0x00FF00);
-    }
-
-    private function DeleteProfiles(): void
-    {
-        $profiles = ['AcousticSignal'];
-        if (!empty($profiles)) {
-            foreach ($profiles as $profile) {
-                $profileName = 'QT3.' . $this->InstanceID . '.' . $profile;
-                if (IPS_VariableProfileExists($profileName)) {
-                    IPS_DeleteVariableProfile($profileName);
-                }
-            }
-        }
-    }
-
-    private function RegisterVariables(): void
-    {
-        //Tone acknowledgement
-        $profile = 'QT3.' . $this->InstanceID . '.AcousticSignal';
-        $this->RegisterVariableInteger('AcousticSignal', 'Quittungston', $profile, 10);
-        $this->EnableAction('AcousticSignal');
-        //Mute mode
-        $this->RegisterVariableBoolean('MuteMode', 'Stummschaltung', '~Switch', 20);
-        $this->EnableAction('MuteMode');
-    }
-
-    private function SetOptions(): void
-    {
-        IPS_SetHidden($this->GetIDForIdent('AcousticSignal'), !$this->ReadPropertyBoolean('EnableAcousticSignal'));
-        IPS_SetHidden($this->GetIDForIdent('MuteMode'), !$this->ReadPropertyBoolean('EnableMuteMode'));
-    }
-
-    private function RegisterTimers(): void
-    {
-        $this->RegisterTimer('StartMuteMode', 0, 'QT3_StartMuteMode(' . $this->InstanceID . ');');
-        $this->RegisterTimer('StopMuteMode', 0, 'QT3_StopMuteMode(' . $this->InstanceID . ',);');
-    }
-
     private function RegisterMessages(): void
     {
-        //Unregister
+        // Unregister VM_UPDATE
         $messages = $this->GetMessageList();
         if (!empty($messages)) {
             foreach ($messages as $id => $message) {
@@ -270,42 +247,42 @@ class Quittungston3 extends IPSModule
                 }
             }
         }
-        //Register
+
+        // Register VM_UPDATE
         $variables = json_decode($this->ReadPropertyString('TriggerVariables'));
         if (!empty($variables)) {
             foreach ($variables as $variable) {
                 if ($variable->Use) {
-                    if ($variable->TriggeringVariable != 0 && @IPS_ObjectExists($variable->TriggeringVariable)) {
-                        $this->RegisterMessage($variable->TriggeringVariable, VM_UPDATE);
+                    if ($variable->ID != 0 && @IPS_ObjectExists($variable->ID)) {
+                        $this->RegisterMessage($variable->ID, VM_UPDATE);
                     }
                 }
             }
         }
     }
 
-    private function CheckMaintenanceMode(): bool
+    private function ValidateConfiguration(): bool
     {
-        $result = false;
+        $result = true;
         $status = 102;
-        if ($this->ReadPropertyBoolean('MaintenanceMode')) {
-            $result = true;
+        // Maintenance mode
+        $maintenance = $this->CheckMaintenanceMode();
+        if ($maintenance) {
+            $result = false;
             $status = 104;
-            $message = 'Abbruch, der Wartungsmodus ist aktiv!';
-            $this->SendDebug(__FUNCTION__, $message, 0);
-            $this->LogMessage('ID ' . $this->InstanceID . ', ' . __FUNCTION__ . ', ' . $message, KL_WARNING);
         }
+        IPS_SetDisabled($this->InstanceID, $maintenance);
         $this->SetStatus($status);
-        IPS_SetDisabled($this->InstanceID, $result);
         return $result;
     }
 
-    private function CheckMuteMode(): bool
+    private function CheckMaintenanceMode(): bool
     {
-        $muteMode = boolval($this->GetValue('MuteMode'));
-        if ($muteMode) {
-            $message = 'Abbruch, die Stummschaltung ist aktiv!';
-            $this->SendDebug(__FUNCTION__, $message, 0);
+        $result = $this->ReadPropertyBoolean('MaintenanceMode');
+        if ($result) {
+            $this->SendDebug(__FUNCTION__, 'Abbruch, der Wartungsmodus ist aktiv!', 0);
+            $this->LogMessage('ID ' . $this->InstanceID . ', ' . __FUNCTION__ . ', Abbruch, der Wartungsmodus ist aktiv!', KL_WARNING);
         }
-        return $muteMode;
+        return $result;
     }
 }

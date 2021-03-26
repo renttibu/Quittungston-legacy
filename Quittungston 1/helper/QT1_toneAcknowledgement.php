@@ -1,55 +1,29 @@
 <?php
 
-/** @noinspection PhpUnused */
-
 /*
- * @module      Quittungston 1 (Variable)
- *
- * @prefix      QT1
- *
- * @file        QT1_toneAcknowledgement.php
- *
  * @author      Ulrich Bittner
- * @copyright   (c) 2020
+ * @copyright   (c) 2020, 2021
  * @license    	CC BY-NC-SA 4.0
- *              https://creativecommons.org/licenses/by-nc-sa/4.0/
- *
- * @see         https://github.com/ubittner/Quittungston
- *
+ * @see         https://github.com/ubittner/Quittungston/tree/master/Quittungston%201
  */
+
+/** @noinspection PhpUnused */
 
 declare(strict_types=1);
 
 trait QT1_toneAcknowledgement
 {
-    /**
-     * Toggles the tone acknowledgement off or on.
-     *
-     * @param bool $State
-     * false    = off
-     * true     = on
-     *
-     * @param bool $UseSwitchingDelay
-     * false    = no delay
-     * true     = use delay
-     *
-     * @return bool
-     * false    = an error occurred
-     * true     = successful
-     *
-     * @throws Exception
-     */
     public function ToggleToneAcknowledgement(bool $State, bool $UseSwitchingDelay = false): bool
     {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);
         $result = false;
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         if ($this->CheckMaintenanceMode()) {
             return $result;
         }
         if ($this->CheckMuteMode()) {
             return $result;
         }
-        //Semaphore Enter
+        // Semaphore Enter
         if (!IPS_SemaphoreEnter($this->InstanceID . '.AcousticSignal', 5000)) {
             return $result;
         }
@@ -68,7 +42,7 @@ trait QT1_toneAcknowledgement
                 $toggleAgain = @RequestAction($id, $State);
                 if (!$toggleAgain) {
                     $result = false;
-                    //Revert
+                    // Revert
                     $this->SetValue('AcousticSignal', $actualValue);
                     $stateName = 'aus';
                     if ($State) {
@@ -104,185 +78,272 @@ trait QT1_toneAcknowledgement
                 }
             }
         }
-        //Semaphore leave
+        // Semaphore leave
         IPS_SemaphoreLeave($this->InstanceID . '.AcousticSignal');
         return $result;
     }
 
-    /**
-     * Checks a trigger and toggles the tone acknowledgement.
-     *
-     * @param int $SenderID
-     * @param bool $ValueChanged
-     *
-     * @return bool
-     * false    = an error occurred
-     * true     = successful
-     *
-     * @throws Exception
-     */
     public function CheckTrigger(int $SenderID, bool $ValueChanged): bool
     {
-        $result = false;
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);
+        $this->SendDebug(__FUNCTION__, 'Sender: ' . $SenderID . ', Wert hat sich geändert: ' . json_encode($ValueChanged), 0);
         if ($this->CheckMaintenanceMode()) {
-            return $result;
+            return false;
         }
         if ($this->CheckMuteMode()) {
-            return $result;
+            return false;
         }
-        //Trigger variables
-        $triggerVariables = json_decode($this->ReadPropertyString('TriggerVariables'));
-        if (!empty($triggerVariables)) {
-            foreach ($triggerVariables as $variable) {
-                $id = $variable->TriggeringVariable;
-                if ($SenderID == $id) {
-                    if ($variable->Use) {
-                        $this->SendDebug(__FUNCTION__, 'Variable ' . $id . ' ist aktiv', 0);
-                        $execute = false;
-                        $type = IPS_GetVariable($id)['VariableType'];
-                        $trigger = $variable->Trigger;
-                        $value = $variable->Value;
-                        switch ($trigger) {
-                            case 0: #on change (bool, integer, float, string)
-                                if ($ValueChanged) {
-                                    $execute = true;
-                                }
-                                break;
-
-                            case 1: #on update (bool, integer, float, string)
-                                $execute = true;
-                                break;
-
-                            case 2: #on limit drop (integer, float)
-                                switch ($type) {
-                                    case 1: #integer
-                                        $actualValue = GetValueInteger($id);
-                                        $triggerValue = intval($value);
-                                        if ($actualValue < $triggerValue) {
-                                            $execute = true;
-                                        }
-                                        break;
-
-                                    case 2: #float
-                                        $actualValue = GetValueFloat($id);
-                                        $triggerValue = floatval(str_replace(',', '.', $value));
-                                        if ($actualValue < $triggerValue) {
-                                            $execute = true;
-                                        }
-                                        break;
-
-                                }
-                                break;
-
-                            case 3: #on limit exceed (integer, float)
-                                switch ($type) {
-                                    case 1: #integer
-                                        $actualValue = GetValueInteger($id);
-                                        $triggerValue = intval($value);
-                                        if ($actualValue > $triggerValue) {
-                                            $execute = true;
-                                        }
-                                        break;
-
-                                    case 2: #float
-                                        $actualValue = GetValueFloat($id);
-                                        $triggerValue = floatval(str_replace(',', '.', $value));
-                                        if ($actualValue > $triggerValue) {
-                                            $execute = true;
-                                        }
-                                        break;
-
-                                }
-                                break;
-
-                            case 4: #on specific value (bool, integer, float, string)
-                                switch ($type) {
-                                    case 0: #bool
-                                        $actualValue = GetValueBoolean($id);
-                                        if ($value == 'false') {
-                                            $value = '0';
-                                        }
-                                        $triggerValue = boolval($value);
-                                        if ($actualValue == $triggerValue) {
-                                            $condition = $variable->Condition;
-                                            switch ($condition) {
-                                                case 1: #trigger once
-                                                    if ($ValueChanged) {
-                                                        $execute = true;
-                                                    }
-                                                    break;
-
-                                                case 2: #trigger every time
-                                                    $execute = true;
-                                            }
-                                        }
-                                        break;
-
-                                    case 1: #integer
-                                        $actualValue = GetValueInteger($id);
-                                        $triggerValue = intval($value);
-                                        if ($actualValue == $triggerValue) {
-                                            $condition = $variable->Condition;
-                                            switch ($condition) {
-                                                case 1: #trigger once
-                                                    if ($ValueChanged) {
-                                                        $execute = true;
-                                                    }
-                                                    break;
-
-                                                case 2: #trigger every time
-                                                    $execute = true;
-                                            }
-                                        }
-                                        break;
-
-                                    case 2: #float
-                                        $actualValue = GetValueFloat($id);
-                                        $triggerValue = floatval(str_replace(',', '.', $value));
-                                        if ($actualValue == $triggerValue) {
-                                            $condition = $variable->Condition;
-                                            switch ($condition) {
-                                                case 1: #trigger once
-                                                    if ($ValueChanged) {
-                                                        $execute = true;
-                                                    }
-                                                    break;
-
-                                                case 2: #trigger every time
-                                                    $execute = true;
-                                            }
-                                        }
-                                        break;
-
-                                    case 3: #string
-                                        $actualValue = GetValueString($id);
-                                        $triggerValue = (string) $value;
-                                        if ($actualValue == $triggerValue) {
-                                            $condition = $variable->Condition;
-                                            switch ($condition) {
-                                                case 1: #trigger once
-                                                    if ($ValueChanged) {
-                                                        $execute = true;
-                                                    }
-                                                    break;
-
-                                                case 2: #trigger every time
-                                                    $execute = true;
-                                            }
-                                        }
-                                        break;
-
-                                }
-                                break;
-
-                        }
-                        if ($execute) {
-                            $result = $this->ToggleToneAcknowledgement(true, true);
-                        }
-                    }
+        $vars = json_decode($this->ReadPropertyString('TriggerVariables'), true);
+        if (empty($vars)) {
+            return false;
+        }
+        $key = array_search($SenderID, array_column($vars, 'ID'));
+        if (!is_int($key)) {
+            return false;
+        }
+        if (!$vars[$key]['Use']) {
+            return false;
+        }
+        $execute = false;
+        $state = false;
+        $type = IPS_GetVariable($SenderID)['VariableType'];
+        $value = $vars[$key]['Value'];
+        switch ($vars[$key]['Trigger']) {
+            case 0: # on change (bool, integer, float, string)
+                $this->SendDebug(__FUNCTION__, 'Bei Änderung (bool, integer, float, string)', 0);
+                if ($ValueChanged) {
+                    $execute = true;
+                    $state = true;
                 }
-            }
+                break;
+
+            case 1: # on update (bool, integer, float, string)
+                $this->SendDebug(__FUNCTION__, 'Bei Aktualisierung (bool, integer, float, string)', 0);
+                $execute = true;
+                $state = true;
+                break;
+
+            case 2: # on limit drop, once (integer, float)
+                switch ($type) {
+                    case 1: # integer
+                        $this->SendDebug(__FUNCTION__, 'Bei Grenzunterschreitung, einmalig (integer)', 0);
+                        if ($ValueChanged) {
+                            $execute = true;
+                            if ($value == 'false') {
+                                $value = '0';
+                            }
+                            if ($value == 'true') {
+                                $value = '1';
+                            }
+                            if (GetValueInteger($SenderID) < intval($value)) {
+                                $state = true;
+                            }
+                        }
+                        break;
+
+                    case 2: # float
+                        $this->SendDebug(__FUNCTION__, 'Bei Grenzunterschreitung, einmalig (float)', 0);
+                        if ($ValueChanged) {
+                            $execute = true;
+                            if (GetValueFloat($SenderID) < floatval(str_replace(',', '.', $value))) {
+                                $state = true;
+                            }
+                        }
+                        break;
+
+                }
+                break;
+
+            case 3: # on limit drop, every time (integer, float)
+                switch ($type) {
+                    case 1: # integer
+                        $this->SendDebug(__FUNCTION__, 'Bei Grenzunterschreitung, mehrmalig (integer)', 0);
+                        $execute = true;
+                        if ($value == 'false') {
+                            $value = '0';
+                        }
+                        if ($value == 'true') {
+                            $value = '1';
+                        }
+                        if (GetValueInteger($SenderID) < intval($value)) {
+                            $state = true;
+                        }
+                        break;
+
+                    case 2: # float
+                        $this->SendDebug(__FUNCTION__, 'Bei Grenzunterschreitung, mehrmalig (float)', 0);
+                        $execute = true;
+                        if (GetValueFloat($SenderID) < floatval(str_replace(',', '.', $value))) {
+                            $state = true;
+                        }
+                        break;
+
+                }
+                break;
+
+            case 4: # on limit exceed, once (integer, float)
+                switch ($type) {
+                    case 1: # integer
+                        $this->SendDebug(__FUNCTION__, 'Bei Grenzunterschreitung, einmalig (integer)', 0);
+                        if ($ValueChanged) {
+                            $execute = true;
+                            if ($value == 'false') {
+                                $value = '0';
+                            }
+                            if ($value == 'true') {
+                                $value = '1';
+                            }
+                            if (GetValueInteger($SenderID) > intval($value)) {
+                                $state = true;
+                            }
+                        }
+                        break;
+
+                    case 2: # float
+                        $this->SendDebug(__FUNCTION__, 'Bei Grenzunterschreitung, einmalig (float)', 0);
+                        if ($ValueChanged) {
+                            $execute = true;
+                            if (GetValueFloat($SenderID) > floatval(str_replace(',', '.', $value))) {
+                                $state = true;
+                            }
+                        }
+                        break;
+
+                }
+                break;
+
+            case 5: # on limit exceed, every time (integer, float)
+                switch ($type) {
+                    case 1: # integer
+                        $this->SendDebug(__FUNCTION__, 'Bei Grenzunterschreitung, mehrmalig (integer)', 0);
+                        $execute = true;
+                        if ($value == 'false') {
+                            $value = '0';
+                        }
+                        if ($value == 'true') {
+                            $value = '1';
+                        }
+                        if (GetValueInteger($SenderID) > intval($value)) {
+                            $state = true;
+                        }
+                        break;
+
+                    case 2: # float
+                        $this->SendDebug(__FUNCTION__, 'Bei Grenzunterschreitung, mehrmalig (float)', 0);
+                        $execute = true;
+                        if (GetValueFloat($SenderID) > floatval(str_replace(',', '.', $value))) {
+                            $state = true;
+                        }
+                        break;
+
+                }
+                break;
+
+            case 6: # on specific value, once (bool, integer, float, string)
+                switch ($type) {
+                    case 0: # bool
+                        $this->SendDebug(__FUNCTION__, 'Bei bestimmten Wert, einmalig (bool)', 0);
+                        if ($ValueChanged) {
+                            $execute = true;
+                            if ($value == 'false') {
+                                $value = '0';
+                            }
+                            if (GetValueBoolean($SenderID) == boolval($value)) {
+                                $state = true;
+                            }
+                        }
+                        break;
+
+                    case 1: # integer
+                        $this->SendDebug(__FUNCTION__, 'Bei bestimmten Wert, einmalig (integer)', 0);
+                        if ($ValueChanged) {
+                            $execute = true;
+                            if ($value == 'false') {
+                                $value = '0';
+                            }
+                            if ($value == 'true') {
+                                $value = '1';
+                            }
+                            if (GetValueInteger($SenderID) == intval($value)) {
+                                $state = true;
+                            }
+                        }
+                        break;
+
+                    case 2: # float
+                        $this->SendDebug(__FUNCTION__, 'Bei bestimmten Wert, einmalig (float)', 0);
+                        if ($ValueChanged) {
+                            $execute = true;
+                            if (GetValueFloat($SenderID) == floatval(str_replace(',', '.', $value))) {
+                                $state = true;
+                            }
+                        }
+                        break;
+
+                    case 3: # string
+                        $this->SendDebug(__FUNCTION__, 'Bei bestimmten Wert, einmalig (string)', 0);
+                        if ($ValueChanged) {
+                            $execute = true;
+                            if (GetValueString($SenderID) == (string) $value) {
+                                $state = true;
+                            }
+                        }
+                        break;
+
+                }
+                break;
+
+            case 7: # on specific value, every time (bool, integer, float, string)
+                switch ($type) {
+                    case 0: # bool
+                        $this->SendDebug(__FUNCTION__, 'Bei bestimmten Wert, mehrmalig (bool)', 0);
+                        $execute = true;
+                        if ($value == 'false') {
+                            $value = '0';
+                        }
+                        if (GetValueBoolean($SenderID) == boolval($value)) {
+                            $state = true;
+                        }
+                        break;
+
+                    case 1: # integer
+                        $this->SendDebug(__FUNCTION__, 'Bei bestimmten Wert, mehrmalig (integer)', 0);
+                        $execute = true;
+                        if ($value == 'false') {
+                            $value = '0';
+                        }
+                        if ($value == 'true') {
+                            $value = '1';
+                        }
+                        if (GetValueInteger($SenderID) == intval($value)) {
+                            $state = true;
+                        }
+                        break;
+
+                    case 2: # float
+                        $this->SendDebug(__FUNCTION__, 'Bei bestimmten Wert, mehrmalig (float)', 0);
+                        $execute = true;
+                        if (GetValueFloat($SenderID) == floatval(str_replace(',', '.', $value))) {
+                            $state = true;
+                        }
+                        break;
+
+                    case 3: # string
+                        $this->SendDebug(__FUNCTION__, 'Bei bestimmten Wert, mehrmalig (string)', 0);
+                        $execute = true;
+                        if (GetValueString($SenderID) == (string) $value) {
+                            $state = true;
+                        }
+                        break;
+
+                }
+                break;
+
+        }
+        $this->SendDebug(__FUNCTION__, 'Bedingung erfüllt: ' . json_encode($execute), 0);
+        $result = false;
+        if ($execute) {
+            $result = $this->ToggleToneAcknowledgement($state, true);
         }
         return $result;
     }

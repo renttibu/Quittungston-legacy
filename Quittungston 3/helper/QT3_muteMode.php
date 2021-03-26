@@ -1,39 +1,20 @@
 <?php
 
+/*
+ * @author      Ulrich Bittner
+ * @copyright   (c) 2020, 2021
+ * @license    	CC BY-NC-SA 4.0
+ * @see         https://github.com/ubittner/Quittungston/tree/master/Quittungston%203
+ */
+
+/** @noinspection PhpUnusedPrivateMethodInspection */
 /** @noinspection DuplicatedCode */
 /** @noinspection PhpUnused */
-
-/*
- * @module      Quittungston 3 (HomeMatic)
- *
- * @prefix      QT3
- *
- * @file        QT3_muteMode.php
- *
- * @author      Ulrich Bittner
- * @copyright   (c) 2020
- * @license    	CC BY-NC-SA 4.0
- *              https://creativecommons.org/licenses/by-nc-sa/4.0/
- *
- * @see         https://github.com/ubittner/Quittungston
- *
- */
 
 declare(strict_types=1);
 
 trait QT3_muteMode
 {
-    /**
-     * Toggles the mute mode off or on.
-     *
-     * @param bool $State
-     * false    = off
-     * true     = on
-     *
-     * @return bool
-     * false    = an error occurred
-     * true     = successful
-     */
     public function ToggleMuteMode(bool $State): bool
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
@@ -43,9 +24,6 @@ trait QT3_muteMode
         return $this->SetValue('MuteMode', $State);
     }
 
-    /**
-     * Starts the mute mode, used by timer.
-     */
     public function StartMuteMode(): void
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
@@ -53,9 +31,6 @@ trait QT3_muteMode
         $this->SetMuteModeTimer();
     }
 
-    /**
-     * Stops the night mode, used by timer.
-     */
     public function StopMuteMode(): void
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
@@ -65,20 +40,17 @@ trait QT3_muteMode
 
     #################### Private
 
-    /**
-     * Sets the timer interval for the automatic mute mode.
-     */
     private function SetMuteModeTimer(): void
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $use = $this->ReadPropertyBoolean('UseAutomaticMuteMode');
-        //Start
+        // Start
         $milliseconds = 0;
         if ($use) {
             $milliseconds = $this->GetInterval('MuteModeStartTime');
         }
         $this->SetTimerInterval('StartMuteMode', $milliseconds);
-        //End
+        // End
         $milliseconds = 0;
         if ($use) {
             $milliseconds = $this->GetInterval('MuteModeEndTime');
@@ -86,15 +58,9 @@ trait QT3_muteMode
         $this->SetTimerInterval('StopMuteMode', $milliseconds);
     }
 
-    /**
-     * Gets the interval for a timer.
-     *
-     * @param string $TimerName
-     *
-     * @return int
-     */
     private function GetInterval(string $TimerName): int
     {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);
         $timer = json_decode($this->ReadPropertyString($TimerName));
         $now = time();
         $hour = $timer->hour;
@@ -109,21 +75,31 @@ trait QT3_muteMode
         return ($timestamp - $now) * 1000;
     }
 
-    /**
-     * Checks the state of the automatic mute mode.
-     */
-    private function CheckMuteModeTimer(): void
+    private function CheckMuteModeTimer(): bool
     {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);
         if (!$this->ReadPropertyBoolean('UseAutomaticMuteMode')) {
-            return;
+            return false;
         }
         $start = $this->GetTimerInterval('StartMuteMode');
         $stop = $this->GetTimerInterval('StopMuteMode');
         if ($start > $stop) {
             $this->ToggleMuteMode(true);
+            return true;
         } else {
             $this->ToggleMuteMode(false);
+            return false;
         }
+    }
+
+    private function CheckMuteMode(): bool
+    {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);
+        $muteMode = boolval($this->GetValue('MuteMode'));
+        if ($muteMode) {
+            $message = 'Abbruch, die Stummschaltung ist aktiv!';
+            $this->SendDebug(__FUNCTION__, $message, 0);
+        }
+        return $muteMode;
     }
 }

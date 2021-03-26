@@ -16,12 +16,30 @@
         {
           "type": "CheckBox",
           "name": "EnableAcousticSignal",
-          "caption": "Quittungston (Tonauswahl)"
+          "caption": "Quittungston"
         },
         {
           "type": "CheckBox",
           "name": "EnableMuteMode",
-          "caption": "Stummschaltung (Aus/An)"
+          "caption": "Stummschaltung"
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Alarmsirene",
+      "items": [
+        {
+          "type": "SelectInstance",
+          "name": "AlarmSiren",
+          "caption": "HM-Sec-Sir-WM Instanz, Kanal 4",
+          "width": "600px"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "AlarmSirenSwitchingDelay",
+          "caption": "Schaltverzögerung",
+          "suffix": "Millisekunden"
         }
       ]
     },
@@ -32,12 +50,12 @@
         {
           "type": "List",
           "name": "TriggerVariables",
-          "caption": "Variablen",
-          "rowCount": 10,
+          "caption": "Auslösende Variablen",
+          "rowCount": 5,
           "add": true,
           "delete": true,
           "sort": {
-            "column": "TriggeringVariable",
+            "column": "ID",
             "direction": "ascending"
           },
           "columns": [
@@ -51,20 +69,20 @@
               }
             },
             {
-              "caption": "Variable",
-              "name": "TriggeringVariable",
-              "width": "300px",
+              "caption": "Auslösende Variable",
+              "name": "ID",
+              "width": "600px",
               "add": 0,
-              "onClick": "echo 'ID ' . $TriggeringVariables['TriggeringVariable'];",
+              "onClick": "echo 'ID ' . $TriggeringVariables['ID'];",
               "edit": {
                 "type": "SelectVariable"
               }
             },
             {
-              "caption": "Auslöser",
+              "caption": "Auslöseart",
               "name": "Trigger",
-              "width": "180px",
-              "add": 0,
+              "width": "280px",
+              "add": 6,
               "edit": {
                 "type": "Select",
                 "options": [
@@ -77,50 +95,39 @@
                     "value": 1
                   },
                   {
-                    "caption": "Bei Grenzunterschreitung",
+                    "caption": "Bei Grenzunterschreitung (einmalig)",
                     "value": 2
                   },
                   {
-                    "caption": "Bei Grenzüberschreitung",
+                    "caption": "Bei Grenzunterschreitung (mehrmalig)",
                     "value": 3
                   },
                   {
-                    "caption": "Bei bestimmtem Wert",
+                    "caption": "Bei Grenzüberschreitung (einmalig)",
                     "value": 4
+                  },
+                  {
+                    "caption": "Bei Grenzüberschreitung (mehrmalig)",
+                    "value": 5
+                  },
+                  {
+                    "caption": "Bei bestimmtem Wert (einmalig)",
+                    "value": 6
+                  },
+                  {
+                    "caption": "Bei bestimmtem Wert (mehrmalig)",
+                    "value": 7
                   }
                 ]
               }
             },
             {
-              "caption": "Wert",
+              "caption": "Auslösewert",
               "name": "Value",
-              "width": "100px",
+              "width": "160px",
               "add": "",
               "edit": {
                 "type": "ValidationTextBox"
-              }
-            },
-            {
-              "caption": "Bedingung",
-              "name": "Condition",
-              "width": "170px",
-              "add": 0,
-              "edit": {
-                "type": "Select",
-                "options": [
-                  {
-                    "caption": "Keine Bedingung",
-                    "value": 0
-                  },
-                  {
-                    "caption": "Einmalige Auslösung",
-                    "value": 1
-                  },
-                  {
-                    "caption": "Mehrmalige Auslösung",
-                    "value": 2
-                  }
-                ]
               }
             },
             {
@@ -132,7 +139,7 @@
                 "type": "Select",
                 "options": [
                   {
-                    "caption": "Bitte auswählen",
+                    "caption": "Kein akustisches Signal",
                     "value": 0
                   },
                   {
@@ -155,28 +162,6 @@
               }
             }
           ]
-        }
-      ]
-    },
-    {
-      "type": "ExpansionPanel",
-      "caption": "Alarmsirene",
-      "items": [
-        {
-          "type": "Label",
-          "caption": "Bitte wählen Sie die Instanz für die Alarmsirene (HM-Sec-Sir-WM, Kanal 4) aus"
-        },
-        {
-          "type": "SelectInstance",
-          "name": "AlarmSiren",
-          "caption": "Alarmsirene",
-          "width": "600px"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "AlarmSirenSwitchingDelay",
-          "caption": "Schaltverzögerung",
-          "suffix": "Millisekunden"
         }
       ]
     },
