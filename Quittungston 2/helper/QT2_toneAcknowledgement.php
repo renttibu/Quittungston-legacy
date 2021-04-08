@@ -140,7 +140,7 @@ trait QT2_toneAcknowledgement
             $execute = false;
             $id = $var->ID;
             if ($id != 0 && @IPS_ObjectExists($id)) {
-                if ($var->Use) {
+                if ($var->Use && $SenderID == $id) {
                     $this->SendDebug(__FUNCTION__, 'Variable: ' . $id . ' ist aktiviert', 0);
                     $type = IPS_GetVariable($id)['VariableType'];
                     $value = $var->Value;
