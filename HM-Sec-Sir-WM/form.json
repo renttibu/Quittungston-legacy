@@ -71,7 +71,7 @@
             {
               "caption": "Auslösende Variable",
               "name": "ID",
-              "width": "600px",
+              "width": "auto",
               "add": 0,
               "onClick": "echo 'ID ' . $TriggerVariables['ID'];",
               "edit": {
@@ -80,7 +80,7 @@
             },
             {
               "caption": "Auslöseart",
-              "name": "Trigger",
+              "name": "TriggerType",
               "width": "280px",
               "add": 6,
               "edit": {
@@ -123,7 +123,7 @@
             },
             {
               "caption": "Auslösewert",
-              "name": "Value",
+              "name": "TriggerValue",
               "width": "160px",
               "add": "",
               "edit": {
@@ -139,24 +139,20 @@
                 "type": "Select",
                 "options": [
                   {
-                    "caption": "Kein akustisches Signal",
+                    "caption": "Alarm Aus",
                     "value": 0
                   },
                   {
-                    "caption": "Alarm Aus",
+                    "caption": "Extern Scharf",
                     "value": 1
                   },
                   {
-                    "caption": "Extern Scharf",
+                    "caption": "Intern Scharf",
                     "value": 2
                   },
                   {
-                    "caption": "Intern Scharf",
-                    "value": 3
-                  },
-                  {
                     "caption": "Alarm blockiert",
-                    "value": 4
+                    "value": 3
                   }
                 ]
               }
@@ -195,7 +191,7 @@
         {
           "type": "Button",
           "caption": "Neu einlesen",
-          "onClick": "QT3_ReloadConfiguration($id);"
+          "onClick": "QTHMSECSIRWM_ReloadConfiguration($id);"
         },
         {
           "type": "RowLayout",
@@ -213,7 +209,7 @@
             {
               "type": "Button",
               "caption": "Sichern",
-              "onClick": "QT3_CreateBackup($id, $BackupCategory);"
+              "onClick": "QTHMSECSIRWM_CreateBackup($id, $BackupCategory);"
             }
           ]
         },
@@ -239,7 +235,7 @@
                   {
                     "type": "Button",
                     "caption": "Wiederherstellen",
-                    "onClick": "QT3_RestoreConfiguration($id, $ConfigurationScript);"
+                    "onClick": "QTHMSECSIRWM_RestoreConfiguration($id, $ConfigurationScript);"
                   }
                 ]
               }
@@ -269,7 +265,7 @@
             {
               "caption": "Sender Name",
               "name": "SenderName",
-              "width": "250px"
+              "width": "auto"
             },
             {
               "caption": "Nachrichten ID",
@@ -299,22 +295,22 @@
     {
       "code": 101,
       "icon": "active",
-      "caption": "Quittungston (HomeMatic) wird erstellt"
+      "caption": "Quittungston HM-Sec-Sir-WM wird erstellt"
     },
     {
       "code": 102,
       "icon": "active",
-      "caption": "Quittungston (HomeMatic) ist aktiv"
+      "caption": "Quittungston HM-Sec-Sir-WM ist aktiv"
     },
     {
       "code": 103,
       "icon": "active",
-      "caption": "Quittungston (HomeMatic) wird gelöscht"
+      "caption": "Quittungston HM-Sec-Sir-WM wird gelöscht"
     },
     {
       "code": 104,
       "icon": "inactive",
-      "caption": "Quittungston (HomeMatic) ist inaktiv"
+      "caption": "Quittungston HM-Sec-Sir-WM ist inaktiv"
     },
     {
       "code": 200,

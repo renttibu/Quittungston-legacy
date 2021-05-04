@@ -27,18 +27,24 @@
     },
     {
       "type": "ExpansionPanel",
-      "caption": "Alarmsirene",
+      "caption": "Quittungston",
       "items": [
         {
-          "type": "SelectInstance",
-          "name": "AlarmSiren",
-          "caption": "HmIP-ASIR -O/-2 Instanz, Kanal 3",
+          "type": "SelectVariable",
+          "name": "ToneAcknowledgementVariable",
+          "caption": "Variable",
           "width": "600px"
         },
         {
           "type": "NumberSpinner",
-          "name": "AlarmSirenSwitchingDelay",
+          "name": "ToneAcknowledgementVariableSwitchingDelay",
           "caption": "Schaltverzögerung",
+          "suffix": "Millisekunden"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "ImpulseDuration",
+          "caption": "Impulsdauer",
           "suffix": "Millisekunden"
         }
       ]
@@ -71,7 +77,7 @@
             {
               "caption": "Auslösende Variable",
               "name": "ID",
-              "width": "600px",
+              "width": "auto",
               "add": 0,
               "onClick": "echo 'ID ' . $TriggerVariables['ID'];",
               "edit": {
@@ -80,7 +86,7 @@
             },
             {
               "caption": "Auslöseart",
-              "name": "Trigger",
+              "name": "TriggerType",
               "width": "280px",
               "add": 6,
               "edit": {
@@ -123,58 +129,11 @@
             },
             {
               "caption": "Auslösewert",
-              "name": "Value",
+              "name": "TriggerValue",
               "width": "160px",
               "add": "",
               "edit": {
                 "type": "ValidationTextBox"
-              }
-            },
-            {
-              "caption": "Akustisches Signal",
-              "name": "AcousticSignal",
-              "width": "200px",
-              "add": 0,
-              "edit": {
-                "type": "Select",
-                "options": [
-                  {
-                    "caption": "Kein akustisches Signal",
-                    "value": 0
-                  },
-                  {
-                    "caption": "Batterie leer",
-                    "value": 1
-                  },
-                  {
-                    "caption": "Unscharf",
-                    "value": 2
-                  },
-                  {
-                    "caption": "Intern Scharf",
-                    "value": 3
-                  },
-                  {
-                    "caption": "Extern Scharf",
-                    "value": 4
-                  },
-                  {
-                    "caption": "Intern verzögert Scharf",
-                    "value": 5
-                  },
-                  {
-                    "caption": "Extern verzögert Scharf",
-                    "value": 6
-                  },
-                  {
-                    "caption": "Ereignis",
-                    "value": 7
-                  },
-                  {
-                    "caption": "Fehler",
-                    "value": 8
-                  }
-                ]
               }
             }
           ]
@@ -211,7 +170,7 @@
         {
           "type": "Button",
           "caption": "Neu einlesen",
-          "onClick": "QT2_ReloadConfiguration($id);"
+          "onClick": "QT_ReloadConfiguration($id);"
         },
         {
           "type": "RowLayout",
@@ -229,7 +188,7 @@
             {
               "type": "Button",
               "caption": "Sichern",
-              "onClick": "QT2_CreateBackup($id, $BackupCategory);"
+              "onClick": "QT_CreateBackup($id, $BackupCategory);"
             }
           ]
         },
@@ -255,7 +214,7 @@
                   {
                     "type": "Button",
                     "caption": "Wiederherstellen",
-                    "onClick": "QT2_RestoreConfiguration($id, $ConfigurationScript);"
+                    "onClick": "QT_RestoreConfiguration($id, $ConfigurationScript);"
                   }
                 ]
               }
@@ -285,7 +244,7 @@
             {
               "caption": "Sender Name",
               "name": "SenderName",
-              "width": "250px"
+              "width": "auto"
             },
             {
               "caption": "Nachrichten ID",
@@ -315,22 +274,22 @@
     {
       "code": 101,
       "icon": "active",
-      "caption": "Quittungston (Homematic IP) wird erstellt"
+      "caption": "Quittungston wird erstellt"
     },
     {
       "code": 102,
       "icon": "active",
-      "caption": "Quittungston (Homematic IP) ist aktiv"
+      "caption": "Quittungston ist aktiv"
     },
     {
       "code": 103,
       "icon": "active",
-      "caption": "Quittungston (Homematic IP) wird gelöscht"
+      "caption": "Quittungston wird gelöscht"
     },
     {
       "code": 104,
       "icon": "inactive",
-      "caption": "Quittungston (Homematic IP) ist inaktiv"
+      "caption": "Quittungston ist inaktiv"
     },
     {
       "code": 200,

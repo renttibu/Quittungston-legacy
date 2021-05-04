@@ -1,0 +1,14 @@
+{
+  "id": "{606A79F9-3826-E531-1753-BA0C084D7BB4}",
+  "name": "Quittungston",
+  "type": 3,
+  "vendor": "Ulrich Bittner",
+  "aliases": [
+    "Quittungston"
+  ],
+  "url": "https://github.com/ubittner/Quittungston/tree/master/Quittungston",
+  "parentRequirements": [],
+  "childRequirements": [],
+  "implemented": [],
+  "prefix": "QT"
+}

@@ -3,8 +3,8 @@
 /*
  * @author      Ulrich Bittner
  * @copyright   (c) 2020, 2021
- * @license    	CC BY-NC-SA 4.0
- * @see         https://github.com/ubittner/Quittungston/tree/master/Quittungston%201
+ * @license     CC BY-NC-SA 4.0
+ * @see         https://github.com/ubittner/Quittungston/tree/master/Quittungston
  */
 
 /** @noinspection DuplicatedCode */
@@ -13,12 +13,13 @@
 declare(strict_types=1);
 include_once __DIR__ . '/helper/autoload.php';
 
-class Quittungston1 extends IPSModule # Variable
+class Quittungston extends IPSModule
 {
     // Helper
-    use QT1_backupRestore;
-    use QT1_muteMode;
-    use QT1_toneAcknowledgement;
+    use QT_backupRestore;
+    use QT_muteMode;
+    use QT_toneAcknowledgement;
+    use QT_triggerVariable;
 
     // Constants
     private const DELAY_MILLISECONDS = 100;
@@ -39,22 +40,32 @@ class Quittungston1 extends IPSModule # Variable
         $this->RegisterPropertyInteger('ImpulseDuration', 0);
         // Trigger variables
         $this->RegisterPropertyString('TriggerVariables', '[]');
-        // Mute function
+        // Mute mode
         $this->RegisterPropertyBoolean('UseAutomaticMuteMode', false);
         $this->RegisterPropertyString('MuteModeStartTime', '{"hour":22,"minute":0,"second":0}');
         $this->RegisterPropertyString('MuteModeEndTime', '{"hour":6,"minute":0,"second":0}');
 
         // Variables
         // Tone acknowledgement
+        $id = @$this->GetIDForIdent('AcousticSignal');
         $this->RegisterVariableBoolean('AcousticSignal', 'Quittungston', '~Switch', 10);
         $this->EnableAction('AcousticSignal');
+        if ($id == false) {
+            IPS_SetIcon(@$this->GetIDForIdent('AcousticSignal'), 'Speaker');
+        }
         // Mute mode
-        $this->RegisterVariableBoolean('MuteMode', 'Stummschaltung', '~Switch', 20);
+        $profile = 'QT.' . $this->InstanceID . '.MuteMode.Reversed';
+        if (!IPS_VariableProfileExists($profile)) {
+            IPS_CreateVariableProfile($profile, 0);
+        }
+        IPS_SetVariableProfileAssociation($profile, 0, 'Aus', 'Speaker', -1);
+        IPS_SetVariableProfileAssociation($profile, 1, 'An', 'Speaker', 0x00FF00);
+        $this->RegisterVariableBoolean('MuteMode', 'Stummschaltung', $profile, 20);
         $this->EnableAction('MuteMode');
 
         // Timers
-        $this->RegisterTimer('StartMuteMode', 0, 'QT1_StartMuteMode(' . $this->InstanceID . ');');
-        $this->RegisterTimer('StopMuteMode', 0, 'QT1_StopMuteMode(' . $this->InstanceID . ',);');
+        $this->RegisterTimer('StartMuteMode', 0, 'QT_StartMuteMode(' . $this->InstanceID . ');');
+        $this->RegisterTimer('StopMuteMode', 0, 'QT_StopMuteMode(' . $this->InstanceID . ',);');
     }
 
     public function ApplyChanges()
@@ -88,6 +99,17 @@ class Quittungston1 extends IPSModule # Variable
     {
         // Never delete this line!
         parent::Destroy();
+
+        // Delete profiles
+        $profiles = ['MuteMode.Reversed'];
+        if (!empty($profiles)) {
+            foreach ($profiles as $profile) {
+                $profileName = 'QT.' . $this->InstanceID . '.' . $profile;
+                if (IPS_VariableProfileExists($profileName)) {
+                    IPS_DeleteVariableProfile($profileName);
+                }
+            }
+        }
     }
 
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
@@ -121,8 +143,8 @@ class Quittungston1 extends IPSModule # Variable
                 if ($Data[1]) {
                     $valueChanged = 'true';
                 }
-                $scriptText = 'QT1_CheckTrigger(' . $this->InstanceID . ', ' . $SenderID . ', ' . $valueChanged . ');';
-                IPS_RunScriptText($scriptText);
+                $scriptText = 'QT_CheckTriggerVariable(' . $this->InstanceID . ', ' . $SenderID . ', ' . $valueChanged . ');';
+                @IPS_RunScriptText($scriptText);
                 break;
 
         }
@@ -131,7 +153,6 @@ class Quittungston1 extends IPSModule # Variable
     public function GetConfigurationForm()
     {
         $formData = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
-
         // Trigger variables
         $variables = json_decode($this->ReadPropertyString('TriggerVariables'));
         if (!empty($variables)) {
@@ -146,14 +167,13 @@ class Quittungston1 extends IPSModule # Variable
                     $rowColor = '#FFC0C0'; # red
                 }
                 $formData['elements'][2]['items'][0]['values'][] = [
-                    'Use'                   => $use,
-                    'TriggeringVariable'    => $id,
-                    'Trigger'               => $variable->Trigger,
-                    'Value'                 => $variable->Value,
-                    'rowColor'              => $rowColor];
+                    'Use'           => $use,
+                    'ID'            => $id,
+                    'TriggerType'   => $variable->TriggerType,
+                    'TriggerValue'  => $variable->TriggerValue,
+                    'rowColor'      => $rowColor];
             }
         }
-
         // Registered messages
         $messages = $this->GetMessageList();
         foreach ($messages as $senderID => $messageID) {
@@ -182,7 +202,6 @@ class Quittungston1 extends IPSModule # Variable
                 'MessageDescription'    => $messageDescription,
                 'rowColor'              => $rowColor];
         }
-
         return json_encode($formData);
     }
 
@@ -216,7 +235,7 @@ class Quittungston1 extends IPSModule # Variable
 
     private function RegisterMessages(): void
     {
-        // Unregister VM_UPDATE
+        // Unregister
         $messages = $this->GetMessageList();
         if (!empty($messages)) {
             foreach ($messages as $id => $message) {
@@ -227,8 +246,7 @@ class Quittungston1 extends IPSModule # Variable
                 }
             }
         }
-
-        // Register VM_UPDATE
+        // Register
         $variables = json_decode($this->ReadPropertyString('TriggerVariables'));
         if (!empty($variables)) {
             foreach ($variables as $variable) {

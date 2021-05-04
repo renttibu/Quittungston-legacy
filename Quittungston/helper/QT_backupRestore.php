@@ -3,8 +3,8 @@
 /*
  * @author      Ulrich Bittner
  * @copyright   (c) 2020, 2021
- * @license    	CC BY-NC-SA 4.0
- * @see         https://github.com/ubittner/Quittungston/tree/master/Quittungston%201
+ * @license     CC BY-NC-SA 4.0
+ * @see         https://github.com/ubittner/Quittungston/tree/master/Quittungston
  */
 
 /** @noinspection DuplicatedCode */
@@ -12,10 +12,8 @@
 
 declare(strict_types=1);
 
-trait QT1_backupRestore
+trait QT_backupRestore
 {
-    #################### Backup
-
     public function CreateBackup(int $BackupCategory): void
     {
         if (IPS_GetInstance($this->InstanceID)['InstanceStatus'] == 102) {
@@ -30,8 +28,6 @@ trait QT1_backupRestore
             echo 'Die Konfiguration wurde erfolgreich gesichert!';
         }
     }
-
-    #################### Restore
 
     public function RestoreConfiguration(int $ConfigurationScript): void
     {

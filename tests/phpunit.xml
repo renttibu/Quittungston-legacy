@@ -5,9 +5,9 @@
     </php>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">../Quittungston 1</directory>
-            <directory suffix=".php">../Quittungston 2</directory>
-            <directory suffix=".php">../Quittungston 3</directory>
+            <directory suffix=".php">../Quittungston</directory>
+            <directory suffix=".php">../HM-Sec-Sir-WM</directory>
+            <directory suffix=".php">../HmIP-ASIR</directory>
         </whitelist>
     </filter>
 </phpunit>

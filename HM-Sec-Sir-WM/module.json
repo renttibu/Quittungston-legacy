@@ -1,0 +1,14 @@
+{
+  "id": "{4EC0BB2A-C9BF-CF69-BF7E-B1360DBD5561}",
+  "name": "Quittungston HMSecSirWM",
+  "type": 3,
+  "vendor": "Ulrich Bittner",
+  "aliases": [
+    "Quittungston HM-Sec-Sir-WM"
+  ],
+  "url": "https://github.com/ubittner/Quittungston/tree/master/HM-Sec-Sir-WM",
+  "parentRequirements": [],
+  "childRequirements": [],
+  "implemented": [],
+  "prefix": "QTHMSECSIRWM"
+}

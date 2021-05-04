@@ -27,24 +27,107 @@
     },
     {
       "type": "ExpansionPanel",
-      "caption": "Quittungston",
+      "caption": "Alarmsirene",
       "items": [
         {
-          "type": "SelectVariable",
-          "name": "ToneAcknowledgementVariable",
-          "caption": "Variable",
+          "type": "SelectInstance",
+          "name": "AlarmSiren",
+          "caption": "HmIP-ASIR -O/-2 Instanz, Kanal 3",
           "width": "600px"
         },
         {
           "type": "NumberSpinner",
-          "name": "ToneAcknowledgementVariableSwitchingDelay",
+          "name": "AlarmSirenSwitchingDelay",
           "caption": "Schaltverzögerung",
           "suffix": "Millisekunden"
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Virtuelle Fernbedienungen",
+      "items": [
+        {
+          "type": "List",
+          "name": "VirtualRemoteControls",
+          "caption": "Virtuelle Fernbedienungen",
+          "rowCount": 5,
+          "add": true,
+          "delete": true,
+          "sort": {
+            "column": "ID",
+            "direction": "ascending"
+          },
+          "columns": [
+            {
+              "caption": "Aktiviert",
+              "name": "Use",
+              "width": "100px",
+              "add": true,
+              "edit": {
+                "type": "CheckBox"
+              }
+            },
+            {
+              "caption": "Akustisches Signal",
+              "name": "AcousticSignal",
+              "width": "200px",
+              "add": 0,
+              "edit": {
+                "type": "Select",
+                "options": [
+                  {
+                    "caption": "Batterie leer",
+                    "value": 0
+                  },
+                  {
+                    "caption": "Unscharf",
+                    "value": 1
+                  },
+                  {
+                    "caption": "Intern Scharf",
+                    "value": 2
+                  },
+                  {
+                    "caption": "Extern Scharf",
+                    "value": 3
+                  },
+                  {
+                    "caption": "Intern verzögert Scharf",
+                    "value": 4
+                  },
+                  {
+                    "caption": "Extern verzögert Scharf",
+                    "value": 5
+                  },
+                  {
+                    "caption": "Ereignis",
+                    "value": 6
+                  },
+                  {
+                    "caption": "Fehler",
+                    "value": 7
+                  }
+                ]
+              }
+            },
+            {
+              "caption": "Virtuelle Fernbedienung",
+              "name": "ID",
+              "width": "auto",
+              "add": 0,
+              "onClick": "echo 'ID ' . $VirtualRemoteControls['ID'];",
+              "edit": {
+                "type": "SelectVariable"
+              }
+            }
+          ]
         },
         {
           "type": "NumberSpinner",
-          "name": "ImpulseDuration",
-          "caption": "Impulsdauer",
+          "name": "VirtualRemoteControlSwitchingDelay",
+          "caption": "Schaltverzögerung",
+          "minimum": 0,
           "suffix": "Millisekunden"
         }
       ]
@@ -77,7 +160,7 @@
             {
               "caption": "Auslösende Variable",
               "name": "ID",
-              "width": "600px",
+              "width": "auto",
               "add": 0,
               "onClick": "echo 'ID ' . $TriggerVariables['ID'];",
               "edit": {
@@ -86,7 +169,7 @@
             },
             {
               "caption": "Auslöseart",
-              "name": "Trigger",
+              "name": "TriggerType",
               "width": "280px",
               "add": 6,
               "edit": {
@@ -129,11 +212,54 @@
             },
             {
               "caption": "Auslösewert",
-              "name": "Value",
+              "name": "TriggerValue",
               "width": "160px",
               "add": "",
               "edit": {
                 "type": "ValidationTextBox"
+              }
+            },
+            {
+              "caption": "Akustisches Signal",
+              "name": "AcousticSignal",
+              "width": "200px",
+              "add": 1,
+              "edit": {
+                "type": "Select",
+                "options": [
+                  {
+                    "caption": "Batterie leer",
+                    "value": 0
+                  },
+                  {
+                    "caption": "Unscharf",
+                    "value": 1
+                  },
+                  {
+                    "caption": "Intern Scharf",
+                    "value": 2
+                  },
+                  {
+                    "caption": "Extern Scharf",
+                    "value": 3
+                  },
+                  {
+                    "caption": "Intern verzögert Scharf",
+                    "value": 4
+                  },
+                  {
+                    "caption": "Extern verzögert Scharf",
+                    "value": 5
+                  },
+                  {
+                    "caption": "Ereignis",
+                    "value": 6
+                  },
+                  {
+                    "caption": "Fehler",
+                    "value": 7
+                  }
+                ]
               }
             }
           ]
@@ -170,7 +296,7 @@
         {
           "type": "Button",
           "caption": "Neu einlesen",
-          "onClick": "QT1_ReloadConfiguration($id);"
+          "onClick": "QTHMIPASIR_ReloadConfiguration($id);"
         },
         {
           "type": "RowLayout",
@@ -188,7 +314,7 @@
             {
               "type": "Button",
               "caption": "Sichern",
-              "onClick": "QT1_CreateBackup($id, $BackupCategory);"
+              "onClick": "QTHMIPASIR_CreateBackup($id, $BackupCategory);"
             }
           ]
         },
@@ -214,7 +340,7 @@
                   {
                     "type": "Button",
                     "caption": "Wiederherstellen",
-                    "onClick": "QT1_RestoreConfiguration($id, $ConfigurationScript);"
+                    "onClick": "QTHMIPASIR_RestoreConfiguration($id, $ConfigurationScript);"
                   }
                 ]
               }
@@ -244,7 +370,7 @@
             {
               "caption": "Sender Name",
               "name": "SenderName",
-              "width": "250px"
+              "width": "auto"
             },
             {
               "caption": "Nachrichten ID",
@@ -274,22 +400,22 @@
     {
       "code": 101,
       "icon": "active",
-      "caption": "Quittungston (Variable) wird erstellt"
+      "caption": "Quittungston HmIP-ASIR wird erstellt"
     },
     {
       "code": 102,
       "icon": "active",
-      "caption": "Quittungston (Variable) ist aktiv"
+      "caption": "Quittungston HmIP-ASIR ist aktiv"
     },
     {
       "code": 103,
       "icon": "active",
-      "caption": "Quittungston (Variable) wird gelöscht"
+      "caption": "Quittungston HmIP-ASIR wird gelöscht"
     },
     {
       "code": 104,
       "icon": "inactive",
-      "caption": "Quittungston (Variable) ist inaktiv"
+      "caption": "Quittungston HmIP-ASIR ist inaktiv"
     },
     {
       "code": 200,

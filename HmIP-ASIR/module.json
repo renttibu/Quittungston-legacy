@@ -1,0 +1,14 @@
+{
+  "id": "{3978FC3A-018A-B363-AFE7-DF2555733562}",
+  "name": "Quittungston HmIPASIR",
+  "type": 3,
+  "vendor": "Ulrich Bittner",
+  "aliases": [
+    "Quittungston HmIP-ASIR"
+  ],
+  "url": "https://github.com/ubittner/Quittungston/tree/master/HmIP-ASIR",
+  "parentRequirements": [],
+  "childRequirements": [],
+  "implemented": [],
+  "prefix": "QTHMIPASIR"
+}

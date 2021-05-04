@@ -6,23 +6,23 @@ include_once __DIR__ . '/stubs/Validator.php';
 
 class QuittungstonValidationTest extends TestCaseSymconValidation
 {
-    public function testValidateQuittungston(): void
+    public function testValidateLibrary_Quittungston(): void
     {
         $this->validateLibrary(__DIR__ . '/..');
     }
 
-    public function testValidateQuittungston1Module(): void
+    public function testValidateModule_Quittungston(): void
     {
-        $this->validateModule(__DIR__ . '/../Quittungston 1');
+        $this->validateModule(__DIR__ . '/../Quittungston');
     }
 
-    public function testValidateQuittungston2Module(): void
+    public function testValidateModule_HMSecSirWM(): void
     {
-        $this->validateModule(__DIR__ . '/../Quittungston 2');
+        $this->validateModule(__DIR__ . '/../HM-Sec-Sir-WM');
     }
 
-    public function testValidateQuittungston3Module(): void
+    public function testValidateModule_HmIPASIR(): void
     {
-        $this->validateModule(__DIR__ . '/../Quittungston 3');
+        $this->validateModule(__DIR__ . '/../HmIP-ASIR');
     }
 }
