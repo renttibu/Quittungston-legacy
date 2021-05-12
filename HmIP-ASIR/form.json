@@ -162,9 +162,20 @@
               "name": "ID",
               "width": "auto",
               "add": 0,
-              "onClick": "echo 'ID ' . $TriggerVariables['ID'];",
+              "onClick": "QTHMIPASIR_ShowVariableDetails($id, $TriggerVariables['ID']);",
               "edit": {
                 "type": "SelectVariable"
+              }
+            },
+            {
+              "caption": "Info",
+              "name": "Info",
+              "width": "160px",
+              "add": "",
+              "visible": false,
+              "edit": {
+                "type": "Button",
+                "onClick": "QTHMIPASIR_ShowVariableDetails($id, $ID);"
               }
             },
             {
