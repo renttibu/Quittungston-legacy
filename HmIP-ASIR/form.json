@@ -116,12 +116,20 @@
               "name": "ID",
               "width": "auto",
               "add": 0,
-              "onClick": "echo 'ID ' . $VirtualRemoteControls['ID'];",
+              "onClick": "QTHMIPASIR_EnableVirtualRemoteControlVariableConfigurationButton($id, $VirtualRemoteControls['ID']);",
               "edit": {
                 "type": "SelectVariable"
               }
             }
           ]
+        },
+        {
+          "type": "OpenObjectButton",
+          "caption": "Bearbeiten",
+          "name": "VirtualRemoteControlVariableConfigurationButton",
+          "enabled": false,
+          "visible": false,
+          "objectID": 0
         },
         {
           "type": "NumberSpinner",
@@ -162,7 +170,7 @@
               "name": "ID",
               "width": "auto",
               "add": 0,
-              "onClick": "QTHMIPASIR_ShowVariableDetails($id, $TriggerVariables['ID']);",
+              "onClick": "QTHMIPASIR_EnableTriggerVariableConfigurationButton($id, $TriggerVariables['ID']);",
               "edit": {
                 "type": "SelectVariable"
               }
@@ -274,6 +282,14 @@
               }
             }
           ]
+        },
+        {
+          "type": "OpenObjectButton",
+          "caption": "Bearbeiten",
+          "name": "TriggerVariableConfigurationButton",
+          "enabled": false,
+          "visible": false,
+          "objectID": 0
         }
       ]
     },

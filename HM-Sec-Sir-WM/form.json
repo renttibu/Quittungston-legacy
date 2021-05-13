@@ -73,7 +73,7 @@
               "name": "ID",
               "width": "auto",
               "add": 0,
-              "onClick": "QTHMSECSIRWM_ShowVariableDetails($id, $TriggerVariables['ID']);",
+              "onClick": "QTHMSECSIRWM_EnableTriggerVariableConfigurationButton($id, $TriggerVariables['ID']);",
               "edit": {
                 "type": "SelectVariable"
               }
@@ -169,6 +169,14 @@
               }
             }
           ]
+        },
+        {
+          "type": "OpenObjectButton",
+          "caption": "Bearbeiten",
+          "name": "TriggerVariableConfigurationButton",
+          "enabled": false,
+          "visible": false,
+          "objectID": 0
         }
       ]
     },

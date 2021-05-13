@@ -11,11 +11,6 @@ class QuittungstonValidationTest extends TestCaseSymconValidation
         $this->validateLibrary(__DIR__ . '/..');
     }
 
-    public function testValidateModule_Quittungston(): void
-    {
-        $this->validateModule(__DIR__ . '/../Quittungston');
-    }
-
     public function testValidateModule_HMSecSirWM(): void
     {
         $this->validateModule(__DIR__ . '/../HM-Sec-Sir-WM');
@@ -24,5 +19,10 @@ class QuittungstonValidationTest extends TestCaseSymconValidation
     public function testValidateModule_HmIPASIR(): void
     {
         $this->validateModule(__DIR__ . '/../HmIP-ASIR');
+    }
+
+    public function testValidateModule_Quittungston(): void
+    {
+        $this->validateModule(__DIR__ . '/../Quittungston');
     }
 }

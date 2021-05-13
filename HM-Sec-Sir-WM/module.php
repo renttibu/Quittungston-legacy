@@ -215,6 +215,14 @@ class QuittungstonHMSecSirWM extends IPSModule
         $this->ReloadForm();
     }
 
+    public function EnableTriggerVariableConfigurationButton(int $ObjectID): void
+    {
+        $this->UpdateFormField('TriggerVariableConfigurationButton', 'caption', 'Variable ' . $ObjectID . ' Bearbeiten');
+        $this->UpdateFormField('TriggerVariableConfigurationButton', 'visible', true);
+        $this->UpdateFormField('TriggerVariableConfigurationButton', 'enabled', true);
+        $this->UpdateFormField('TriggerVariableConfigurationButton', 'objectID', $ObjectID);
+    }
+
     public function ShowVariableDetails(int $VariableID): void
     {
         if ($VariableID == 0 || !@IPS_ObjectExists($VariableID)) {

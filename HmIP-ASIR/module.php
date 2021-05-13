@@ -242,6 +242,22 @@ class QuittungstonHmIPASIR extends IPSModule
         $this->ReloadForm();
     }
 
+    public function EnableVirtualRemoteControlVariableConfigurationButton(int $ObjectID): void
+    {
+        $this->UpdateFormField('VirtualRemoteControlVariableConfigurationButton', 'caption', 'Variable ' . $ObjectID . ' Bearbeiten');
+        $this->UpdateFormField('VirtualRemoteControlVariableConfigurationButton', 'visible', true);
+        $this->UpdateFormField('VirtualRemoteControlVariableConfigurationButton', 'enabled', true);
+        $this->UpdateFormField('VirtualRemoteControlVariableConfigurationButton', 'objectID', $ObjectID);
+    }
+
+    public function EnableTriggerVariableConfigurationButton(int $ObjectID): void
+    {
+        $this->UpdateFormField('TriggerVariableConfigurationButton', 'caption', 'Variable ' . $ObjectID . ' Bearbeiten');
+        $this->UpdateFormField('TriggerVariableConfigurationButton', 'visible', true);
+        $this->UpdateFormField('TriggerVariableConfigurationButton', 'enabled', true);
+        $this->UpdateFormField('TriggerVariableConfigurationButton', 'objectID', $ObjectID);
+    }
+
     public function ShowVariableDetails(int $VariableID): void
     {
         if ($VariableID == 0 || !@IPS_ObjectExists($VariableID)) {
