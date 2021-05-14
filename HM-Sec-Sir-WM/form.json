@@ -29,18 +29,6 @@
       "type": "ExpansionPanel",
       "caption": "Alarmsirene",
       "items": [
-        {
-          "type": "SelectInstance",
-          "name": "AlarmSiren",
-          "caption": "HM-Sec-Sir-WM Instanz, Kanal 4",
-          "width": "600px"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "AlarmSirenSwitchingDelay",
-          "caption": "Schaltverzögerung",
-          "suffix": "Millisekunden"
-        }
       ]
     },
     {

@@ -164,6 +164,40 @@ class QuittungstonHmIPASIR extends IPSModule
     public function GetConfigurationForm()
     {
         $formData = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
+        // Alarm siren
+        $id = $this->ReadPropertyInteger('AlarmSiren');
+        $enabled = false;
+        if ($id != 0 && @IPS_ObjectExists($id)) {
+            $enabled = true;
+        }
+        $formData['elements'][1]['items'][0] = [
+            'type'  => 'RowLayout',
+            'items' => [$formData['elements'][1]['items'][0]['items'][0] = [
+                'type'    => 'SelectInstance',
+                'name'    => 'AlarmSiren',
+                'caption' => 'HmIP-ASIR -O/-2 Instanz, Kanal 3',
+                'width'   => '600px',
+            ],
+                $formData['elements'][1]['items'][0]['items'][1] = [
+                    'type'    => 'Label',
+                    'caption' => ' ',
+                    'visible' => $enabled
+                ],
+                $formData['elements'][1]['items'][0]['items'][2] = [
+                    'type'     => 'OpenObjectButton',
+                    'caption'  => 'ID ' . $id . ' konfigurieren',
+                    'visible'  => $enabled,
+                    'objectID' => $id
+                ]
+            ]
+        ];
+        $formData['elements'][1]['items'][1] = [
+            'type'    => 'NumberSpinner',
+            'name'    => 'AlarmSirenSwitchingDelay',
+            'caption' => 'Schaltverzögerung',
+            'minimum' => 0,
+            'suffix'  => 'Millisekunden'
+        ];
         // Virtual remote controls
         $variables = json_decode($this->ReadPropertyString('VirtualRemoteControls'));
         if (!empty($variables)) {

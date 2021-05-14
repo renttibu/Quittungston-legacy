@@ -29,24 +29,6 @@
       "type": "ExpansionPanel",
       "caption": "Quittungston",
       "items": [
-        {
-          "type": "SelectVariable",
-          "name": "ToneAcknowledgementVariable",
-          "caption": "Variable",
-          "width": "600px"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "ToneAcknowledgementVariableSwitchingDelay",
-          "caption": "Schaltverzögerung",
-          "suffix": "Millisekunden"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "ImpulseDuration",
-          "caption": "Impulsdauer",
-          "suffix": "Millisekunden"
-        }
       ]
     },
     {
