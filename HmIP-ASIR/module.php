@@ -263,12 +263,14 @@ class QuittungstonHmIPASIR extends IPSModule
                     $rowColor = '#FFC0C0'; # red
                 }
                 $formData['elements'][3]['items'][0]['values'][] = [
-                    'Use'            => $use,
-                    'ID'             => $id,
-                    'TriggerType'    => $variable->TriggerType,
-                    'TriggerValue'   => $variable->TriggerValue,
-                    'AcousticSignal' => $variable->AcousticSignal,
-                    'rowColor'       => $rowColor];
+                    'Use'                   => $use,
+                    'ID'                    => $id,
+                    'TriggerType'           => $variable->TriggerType,
+                    'TriggerValue'          => $variable->TriggerValue,
+                    'SecondVariable'        => $variable->SecondVariable,
+                    'SecondVariableValue'   => $variable->SecondVariableValue,
+                    'AcousticSignal'        => $variable->AcousticSignal,
+                    'rowColor'              => $rowColor];
             }
         }
         // Registered messages

@@ -24,7 +24,7 @@ trait QTHMSECSIRWM_triggerVariable
         }
         $result = false;
         foreach ($triggerVariables as $triggerVariable) {
-            $execute = false;
+            $triggered = false;
             $id = $triggerVariable->ID;
             if ($id == $SenderID && $triggerVariable->Use) {
                 $type = IPS_GetVariable($id)['VariableType'];
@@ -34,13 +34,13 @@ trait QTHMSECSIRWM_triggerVariable
                     case 0: # on change (bool, integer, float, string)
                         if ($ValueChanged) {
                             $this->SendDebug(__FUNCTION__, 'ID ' . $id . ', Bei Änderung (bool, integer, float, string)', 0);
-                            $execute = true;
+                            $triggered = true;
                         }
                         break;
 
                     case 1: # on update (bool, integer, float, string)
                         $this->SendDebug(__FUNCTION__, 'ID ' . $id . ', Bei Aktualisierung (bool, integer, float, string)', 0);
-                        $execute = true;
+                        $triggered = true;
                         break;
 
                     case 2: # on limit drop, once (integer, float)
@@ -55,7 +55,7 @@ trait QTHMSECSIRWM_triggerVariable
                                     }
                                     if (GetValueInteger($SenderID) < intval($triggerValue)) {
                                         $this->SendDebug(__FUNCTION__, 'ID ' . $id . ', Bei Grenzunterschreitung, einmalig (integer)', 0);
-                                        $execute = true;
+                                        $triggered = true;
                                     }
                                 }
                                 break;
@@ -64,7 +64,7 @@ trait QTHMSECSIRWM_triggerVariable
                                 if ($ValueChanged) {
                                     if (GetValueFloat($SenderID) < floatval(str_replace(',', '.', $triggerValue))) {
                                         $this->SendDebug(__FUNCTION__, 'ID ' . $id . ', Bei Grenzunterschreitung, einmalig (float)', 0);
-                                        $execute = true;
+                                        $triggered = true;
                                     }
                                 }
                                 break;
@@ -83,14 +83,14 @@ trait QTHMSECSIRWM_triggerVariable
                                 }
                                 if (GetValueInteger($SenderID) < intval($triggerValue)) {
                                     $this->SendDebug(__FUNCTION__, 'ID ' . $id . ', Bei Grenzunterschreitung, mehrmalig (integer)', 0);
-                                    $execute = true;
+                                    $triggered = true;
                                 }
                                 break;
 
                             case 2: # float
                                 if (GetValueFloat($SenderID) < floatval(str_replace(',', '.', $triggerValue))) {
                                     $this->SendDebug(__FUNCTION__, 'ID ' . $id . ', Bei Grenzunterschreitung, mehrmalig (float)', 0);
-                                    $execute = true;
+                                    $triggered = true;
                                 }
                                 break;
 
@@ -109,7 +109,7 @@ trait QTHMSECSIRWM_triggerVariable
                                     }
                                     if (GetValueInteger($SenderID) > intval($triggerValue)) {
                                         $this->SendDebug(__FUNCTION__, 'ID ' . $id . ', Bei Grenzunterschreitung, einmalig (integer)', 0);
-                                        $execute = true;
+                                        $triggered = true;
                                     }
                                 }
                                 break;
@@ -118,7 +118,7 @@ trait QTHMSECSIRWM_triggerVariable
                                 if ($ValueChanged) {
                                     if (GetValueFloat($SenderID) > floatval(str_replace(',', '.', $triggerValue))) {
                                         $this->SendDebug(__FUNCTION__, 'ID ' . $id . ', Bei Grenzunterschreitung, einmalig (float)', 0);
-                                        $execute = true;
+                                        $triggered = true;
                                     }
                                 }
                                 break;
@@ -137,14 +137,14 @@ trait QTHMSECSIRWM_triggerVariable
                                 }
                                 if (GetValueInteger($SenderID) > intval($triggerValue)) {
                                     $this->SendDebug(__FUNCTION__, 'ID ' . $id . ', Bei Grenzunterschreitung, mehrmalig (integer)', 0);
-                                    $execute = true;
+                                    $triggered = true;
                                 }
                                 break;
 
                             case 2: # float
                                 if (GetValueFloat($SenderID) > floatval(str_replace(',', '.', $triggerValue))) {
                                     $this->SendDebug(__FUNCTION__, 'ID ' . $id . ', Bei Grenzunterschreitung, mehrmalig (float)', 0);
-                                    $execute = true;
+                                    $triggered = true;
                                 }
                                 break;
 
@@ -160,7 +160,7 @@ trait QTHMSECSIRWM_triggerVariable
                                     }
                                     if (GetValueBoolean($SenderID) == boolval($triggerValue)) {
                                         $this->SendDebug(__FUNCTION__, 'ID ' . $id . ', Bei bestimmten Wert, einmalig (bool)', 0);
-                                        $execute = true;
+                                        $triggered = true;
                                     }
                                 }
                                 break;
@@ -175,7 +175,7 @@ trait QTHMSECSIRWM_triggerVariable
                                     }
                                     if (GetValueInteger($SenderID) == intval($triggerValue)) {
                                         $this->SendDebug(__FUNCTION__, 'ID ' . $id . ', Bei bestimmten Wert, einmalig (integer)', 0);
-                                        $execute = true;
+                                        $triggered = true;
                                     }
                                 }
                                 break;
@@ -184,7 +184,7 @@ trait QTHMSECSIRWM_triggerVariable
                                 if ($ValueChanged) {
                                     if (GetValueFloat($SenderID) == floatval(str_replace(',', '.', $triggerValue))) {
                                         $this->SendDebug(__FUNCTION__, 'ID ' . $id . ', Bei bestimmten Wert, einmalig (float)', 0);
-                                        $execute = true;
+                                        $triggered = true;
                                     }
                                 }
                                 break;
@@ -193,7 +193,7 @@ trait QTHMSECSIRWM_triggerVariable
                                 if ($ValueChanged) {
                                     if (GetValueString($SenderID) == (string) $triggerValue) {
                                         $this->SendDebug(__FUNCTION__, 'ID ' . $id . ', Bei bestimmten Wert, einmalig (string)', 0);
-                                        $execute = true;
+                                        $triggered = true;
                                     }
                                 }
                                 break;
@@ -209,7 +209,7 @@ trait QTHMSECSIRWM_triggerVariable
                                 }
                                 if (GetValueBoolean($SenderID) == boolval($triggerValue)) {
                                     $this->SendDebug(__FUNCTION__, 'ID ' . $id . ', Bei bestimmten Wert, mehrmalig (bool)', 0);
-                                    $execute = true;
+                                    $triggered = true;
                                 }
                                 break;
 
@@ -222,27 +222,83 @@ trait QTHMSECSIRWM_triggerVariable
                                 }
                                 if (GetValueInteger($SenderID) == intval($triggerValue)) {
                                     $this->SendDebug(__FUNCTION__, 'ID ' . $id . ', Bei bestimmten Wert, mehrmalig (integer)', 0);
-                                    $execute = true;
+                                    $triggered = true;
                                 }
                                 break;
 
                             case 2: # float
                                 $this->SendDebug(__FUNCTION__, 'ID ' . $id . ', Bei bestimmten Wert, mehrmalig (float)', 0);
                                 if (GetValueFloat($SenderID) == floatval(str_replace(',', '.', $triggerValue))) {
-                                    $execute = true;
+                                    $triggered = true;
                                 }
                                 break;
 
                             case 3: # string
                                 if (GetValueString($SenderID) == (string) $triggerValue) {
                                     $this->SendDebug(__FUNCTION__, 'ID ' . $id . ', Bei bestimmten Wert, mehrmalig (string)', 0);
-                                    $execute = true;
+                                    $triggered = true;
                                 }
                                 break;
 
                         }
                         break;
 
+                }
+                $execute = false;
+                if ($triggered) {
+                    $secondVariable = $triggerVariable->SecondVariable;
+                    if ($secondVariable != 0 && @IPS_ObjectExists($secondVariable)) {
+                        $type = IPS_GetVariable($secondVariable)['VariableType'];
+                        $value = $triggerVariable->SecondVariableValue;
+                        switch ($type) {
+                            case 0: # bool
+                                if ($value == 'false') {
+                                    $value = '0';
+                                }
+                                if (GetValueBoolean($secondVariable) == boolval($value)) {
+                                    $this->SendDebug(__FUNCTION__, 'Auslösebedingung der weiteren Variable: Bei bestimmten Wert, mehrmalig (bool)', 0);
+                                    $execute = true;
+                                }
+                                break;
+
+                            case 1: # integer
+                                if ($value == 'false') {
+                                    $value = '0';
+                                }
+                                if ($value == 'true') {
+                                    $value = '1';
+                                }
+                                if (GetValueInteger($secondVariable) == intval($value)) {
+                                    $this->SendDebug(__FUNCTION__, 'Auslösebedingung der weiteren Variable: Bei bestimmten Wert, mehrmalig (integer)', 0);
+                                    $execute = true;
+                                }
+                                break;
+
+                            case 2: # float
+                                if ($value == 'false') {
+                                    $value = '0';
+                                }
+                                if ($value == 'true') {
+                                    $value = '1';
+                                }
+                                if (GetValueFloat($secondVariable) == floatval(str_replace(',', '.', $value))) {
+                                    $this->SendDebug(__FUNCTION__, 'Auslösebedingung der weiteren Variable: Bei bestimmten Wert, mehrmalig (float)', 0);
+                                    $execute = true;
+                                }
+                                break;
+
+                            case 3: # string
+                                if (GetValueString($secondVariable) == (string) $value) {
+                                    $this->SendDebug(__FUNCTION__, 'Auslösebedingung der weiteren Variable: Bei bestimmten Wert, mehrmalig (string)', 0);
+                                    $execute = true;
+                                }
+                                break;
+
+                        }
+                    }
+                    if ($secondVariable == 0) {
+                        $execute = true;
+                    }
                 }
                 if ($execute) {
                     $result = $this->ExecuteToneAcknowledgement($acousticSignal, true);

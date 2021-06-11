@@ -227,6 +227,56 @@
               }
             },
             {
+              "caption": " ",
+              "name": "SecondVariableSpacer",
+              "width": "150px",
+              "add": "",
+              "visible": false,
+              "edit": {
+                "type": "Label"
+              }
+            },
+            {
+              "caption": "Weitere Variable",
+              "name": "SecondVariable",
+              "width": "350px",
+              "add": 0,
+              "onClick": "QTHMIPASIR_EnableTriggerVariableConfigurationButton($id, $TriggerVariables['SecondVariable']);",
+              "edit": {
+                "type": "SelectVariable"
+              }
+            },
+            {
+              "caption": "Info",
+              "name": "SecondVariableInfo",
+              "width": "160px",
+              "add": "",
+              "visible": false,
+              "edit": {
+                "type": "Button",
+                "onClick": "QTHMIPASIR_ShowVariableDetails($id, $SecondVariable);"
+              }
+            },
+            {
+              "caption": "Variablenwert",
+              "name": "SecondVariableValue",
+              "width": "160px",
+              "add": "",
+              "edit": {
+                "type": "ValidationTextBox"
+              }
+            },
+            {
+              "caption": " ",
+              "name": "AcousticSignalSpacer",
+              "width": "150px",
+              "add": "",
+              "visible": false,
+              "edit": {
+                "type": "Label"
+              }
+            },
+            {
               "caption": "Akustisches Signal",
               "name": "AcousticSignal",
               "width": "200px",

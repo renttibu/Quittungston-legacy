@@ -128,6 +128,46 @@
               "edit": {
                 "type": "ValidationTextBox"
               }
+            },
+            {
+              "caption": " ",
+              "name": "SecondVariableSpacer",
+              "width": "150px",
+              "add": "",
+              "visible": false,
+              "edit": {
+                "type": "Label"
+              }
+            },
+            {
+              "caption": "Weitere Variable",
+              "name": "SecondVariable",
+              "width": "350px",
+              "add": 0,
+              "onClick": "QT_EnableTriggerVariableConfigurationButton($id, $TriggerVariables['SecondVariable']);",
+              "edit": {
+                "type": "SelectVariable"
+              }
+            },
+            {
+              "caption": "Info",
+              "name": "SecondVariableInfo",
+              "width": "160px",
+              "add": "",
+              "visible": false,
+              "edit": {
+                "type": "Button",
+                "onClick": "QT_ShowVariableDetails($id, $SecondVariable);"
+              }
+            },
+            {
+              "caption": "Variablenwert",
+              "name": "SecondVariableValue",
+              "width": "160px",
+              "add": "",
+              "edit": {
+                "type": "ValidationTextBox"
+              }
             }
           ]
         },
