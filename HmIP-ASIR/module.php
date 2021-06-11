@@ -262,13 +262,21 @@ class QuittungstonHmIPASIR extends IPSModule
                 if ($id == 0 || @!IPS_ObjectExists($id)) {
                     $rowColor = '#FFC0C0'; # red
                 }
+                $secondVariable = 0;
+                if (@isset($variable->SecondVariable)) {
+                    $secondVariable = $variable->SecondVariable;
+                }
+                $secondVariableValue = '';
+                if (@isset($variable->SecondVariableValue)) {
+                    $secondVariableValue = $variable->SecondVariableValue;
+                }
                 $formData['elements'][3]['items'][0]['values'][] = [
                     'Use'                   => $use,
                     'ID'                    => $id,
                     'TriggerType'           => $variable->TriggerType,
                     'TriggerValue'          => $variable->TriggerValue,
-                    'SecondVariable'        => $variable->SecondVariable,
-                    'SecondVariableValue'   => $variable->SecondVariableValue,
+                    'SecondVariable'        => $secondVariable,
+                    'SecondVariableValue'   => $secondVariableValue,
                     'AcousticSignal'        => $variable->AcousticSignal,
                     'rowColor'              => $rowColor];
             }
