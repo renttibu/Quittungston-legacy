@@ -301,6 +301,7 @@ trait QTHMIPASIR_triggerVariable
                     }
                 }
                 if ($execute) {
+                    $this->SendDebug(__FUNCTION__, 'Variable löst akkustische Signalisierung aus!', 0);
                     $result = $this->ExecuteToneAcknowledgement($acousticSignal, true);
                 }
             }

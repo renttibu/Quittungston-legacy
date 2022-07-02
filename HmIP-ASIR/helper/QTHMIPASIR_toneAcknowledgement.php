@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 trait QTHMIPASIR_toneAcknowledgement
 {
-    public function ExecuteToneAcknowledgement(int $AcousticSignal, bool $UseSwitchingDelay = false): bool
+    public function ExecuteToneAcknowledgement(int $AcousticSignal, bool $UseSwitchingDelay): bool
     {
         $result = false;
         if ($this->CheckMaintenanceMode()) {
@@ -75,13 +75,13 @@ trait QTHMIPASIR_toneAcknowledgement
             $parameter1 = @HM_WriteValueInteger($id, 'ACOUSTIC_ALARM_SELECTION', $acousticAlarmSelection);
             $parameter2 = @HM_WriteValueInteger($id, 'OPTICAL_ALARM_SELECTION', 0);
             $parameter3 = @HM_WriteValueInteger($id, 'DURATION_UNIT', 0);
-            $parameter4 = @HM_WriteValueInteger($id, 'DURATION_VALUE', 3);
+            $parameter4 = @HM_WriteValueInteger($id, 'DURATION_VALUE', 5);
             if (!$parameter1 || !$parameter2 || !$parameter3 || !$parameter4) {
                 IPS_Sleep(self::DELAY_MILLISECONDS);
                 $parameter1 = @HM_WriteValueInteger($id, 'ACOUSTIC_ALARM_SELECTION', $AcousticSignal);
                 $parameter2 = @HM_WriteValueInteger($id, 'OPTICAL_ALARM_SELECTION', 0);
                 $parameter3 = @HM_WriteValueInteger($id, 'DURATION_UNIT', 0);
-                $parameter4 = @HM_WriteValueInteger($id, 'DURATION_VALUE', 3);
+                $parameter4 = @HM_WriteValueInteger($id, 'DURATION_VALUE', 5);
                 if (!$parameter1 || !$parameter2 || !$parameter3 || !$parameter4) {
                     $alarmSirenResult = false;
                     // Revert

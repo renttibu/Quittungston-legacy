@@ -271,14 +271,14 @@ class QuittungstonHmIPASIR extends IPSModule
                     $secondVariableValue = $variable->SecondVariableValue;
                 }
                 $formData['elements'][3]['items'][0]['values'][] = [
-                    'Use'                   => $use,
-                    'ID'                    => $id,
-                    'TriggerType'           => $variable->TriggerType,
-                    'TriggerValue'          => $variable->TriggerValue,
-                    'SecondVariable'        => $secondVariable,
-                    'SecondVariableValue'   => $secondVariableValue,
-                    'AcousticSignal'        => $variable->AcousticSignal,
-                    'rowColor'              => $rowColor];
+                    'Use'                 => $use,
+                    'ID'                  => $id,
+                    'TriggerType'         => $variable->TriggerType,
+                    'TriggerValue'        => $variable->TriggerValue,
+                    'SecondVariable'      => $secondVariable,
+                    'SecondVariableValue' => $secondVariableValue,
+                    'AcousticSignal'      => $variable->AcousticSignal,
+                    'rowColor'            => $rowColor];
             }
         }
         // Registered messages
@@ -364,73 +364,71 @@ class QuittungstonHmIPASIR extends IPSModule
         if ($VariableID == 0 || !@IPS_ObjectExists($VariableID)) {
             return;
         }
-        if ($VariableID != 0) {
-            // Variable
-            echo 'ID: ' . $VariableID . "\n";
-            echo 'Name: ' . IPS_GetName($VariableID) . "\n";
-            $variable = IPS_GetVariable($VariableID);
-            if (!empty($variable)) {
-                $variableType = $variable['VariableType'];
-                switch ($variableType) {
-                    case 0:
-                        $variableTypeName = 'Boolean';
-                        break;
+        // Variable
+        echo 'ID: ' . $VariableID . "\n";
+        echo 'Name: ' . IPS_GetName($VariableID) . "\n";
+        $variable = IPS_GetVariable($VariableID);
+        if (!empty($variable)) {
+            $variableType = $variable['VariableType'];
+            switch ($variableType) {
+                case 0:
+                    $variableTypeName = 'Boolean';
+                    break;
 
-                    case 1:
-                        $variableTypeName = 'Integer';
-                        break;
+                case 1:
+                    $variableTypeName = 'Integer';
+                    break;
 
-                    case 2:
-                        $variableTypeName = 'Float';
-                        break;
+                case 2:
+                    $variableTypeName = 'Float';
+                    break;
 
-                    case 3:
-                        $variableTypeName = 'String';
-                        break;
+                case 3:
+                    $variableTypeName = 'String';
+                    break;
 
-                    default:
-                        $variableTypeName = 'Unbekannt';
-                }
-                echo 'Variablentyp: ' . $variableTypeName . "\n";
+                default:
+                    $variableTypeName = 'Unbekannt';
             }
-            // Profile
-            $profile = @IPS_GetVariableProfile($variable['VariableProfile']);
-            if (empty($profile)) {
-                $profile = @IPS_GetVariableProfile($variable['VariableCustomProfile']);
-            }
-            if (!empty($profile)) {
-                $profileType = $variable['VariableType'];
-                switch ($profileType) {
-                    case 0:
-                        $profileTypeName = 'Boolean';
-                        break;
+            echo 'Variablentyp: ' . $variableTypeName . "\n";
+        }
+        // Profile
+        $profile = @IPS_GetVariableProfile($variable['VariableProfile']);
+        if (empty($profile)) {
+            $profile = @IPS_GetVariableProfile($variable['VariableCustomProfile']);
+        }
+        if (!empty($profile)) {
+            $profileType = $variable['VariableType'];
+            switch ($profileType) {
+                case 0:
+                    $profileTypeName = 'Boolean';
+                    break;
 
-                    case 1:
-                        $profileTypeName = 'Integer';
-                        break;
+                case 1:
+                    $profileTypeName = 'Integer';
+                    break;
 
-                    case 2:
-                        $profileTypeName = 'Float';
-                        break;
+                case 2:
+                    $profileTypeName = 'Float';
+                    break;
 
-                    case 3:
-                        $profileTypeName = 'String';
-                        break;
+                case 3:
+                    $profileTypeName = 'String';
+                    break;
 
-                    default:
-                        $profileTypeName = 'Unbekannt';
-                }
-                echo 'Profilname: ' . $profile['ProfileName'] . "\n";
-                echo 'Profiltyp: ' . $profileTypeName . "\n\n";
+                default:
+                    $profileTypeName = 'Unbekannt';
             }
-            if (!empty($variable)) {
-                echo "\nVariable:\n";
-                print_r($variable);
-            }
-            if (!empty($profile)) {
-                echo "\nVariablenprofil:\n";
-                print_r($profile);
-            }
+            echo 'Profilname: ' . $profile['ProfileName'] . "\n";
+            echo 'Profiltyp: ' . $profileTypeName . "\n\n";
+        }
+        if (!empty($variable)) {
+            echo "\nVariable:\n";
+            print_r($variable);
+        }
+        if (!empty($profile)) {
+            echo "\nVariablenprofil:\n";
+            print_r($profile);
         }
     }
 
@@ -440,7 +438,7 @@ class QuittungstonHmIPASIR extends IPSModule
     {
         switch ($Ident) {
             case 'AcousticSignal':
-                $this->ExecuteToneAcknowledgement($Value);
+                $this->ExecuteToneAcknowledgement($Value, false);
                 break;
 
             case 'MuteMode':
